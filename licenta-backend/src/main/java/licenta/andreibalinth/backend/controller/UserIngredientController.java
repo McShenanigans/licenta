@@ -37,4 +37,9 @@ public class UserIngredientController {
     public void update(@RequestBody UserIngredientQuantityDto dto, @PathVariable("id") Long id){
         service.updateUserIngredient(dto, id);
     }
+
+    @DeleteMapping("/delete/{userId}/{ingredientId}")
+    public void delete(@PathVariable("userId") Long userId, @PathVariable("ingredientId") Long ingredientId){
+        service.deleteUserIngredient(userId, ingredientId);
+    }
 }

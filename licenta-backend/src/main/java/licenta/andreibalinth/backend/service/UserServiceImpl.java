@@ -3,38 +3,39 @@ package licenta.andreibalinth.backend.service;
 import licenta.andreibalinth.backend.entities.UserEntity;
 import licenta.andreibalinth.backend.entities.dto.UserDto;
 import licenta.andreibalinth.backend.entities.dto.login.LoginRequestDto;
+import licenta.andreibalinth.backend.mappers.UserMapper;
 import licenta.andreibalinth.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder encoder;
+    private final UserMapper mapper;
 
     @Override
     public List<UserDto> getAll() {
-        return repository.findAll().stream().map(this::convertUserToDto).collect(Collectors.toList());
+        return mapper.userEntityListToUserDtoList(repository.findAll());
     }
 
     @Override
     public Optional<UserDto> getById(Long id) {
         Optional<UserEntity> userOpt = repository.findById(id);
-        return userOpt.map(this::convertUserToDto);
+        return userOpt.map(mapper::userEntityToUserDto);
     }
 
     @Override
     public void add(UserDto dto) {
-        repository.save(convertDtoToUser(dto));
+        UserEntity newUser = mapper.userDtoToUserEntity(dto);
+        newUser.setPassword(encoder.encode(newUser.getPassword()));
+        repository.save(newUser);
     }
 
     @Override
@@ -62,29 +63,6 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userOpt.get();
         if (!encoder.matches(requestDto.getPassword(), user.getPassword()))
             return Optional.empty();
-        return Optional.of(convertUserToDto(user));
-    }
-
-    private UserEntity convertDtoToUser(UserDto dto){
-        UserEntity user = new UserEntity();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setPassword(encoder.encode(dto.getPassword()));
-        user.setUserIngredientQuantities(new HashSet<>());
-        user.setRecipes(new ArrayList<>());
-        return user;
-    }
-
-    private UserDto convertUserToDto(UserEntity user){
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setEmail(user.getEmail());
-        dto.setUsername(user.getUsername());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
-        dto.setPassword("");
-        return dto;
+        return Optional.of(mapper.userEntityToUserDto(user));
     }
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserIngredientQuantityDto {
-    private UserDto user;
     private IngredientEntityDto ingredient;
     private Double quantity;
 }

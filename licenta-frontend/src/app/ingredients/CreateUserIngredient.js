@@ -75,7 +75,7 @@ function CreateUserIngredient() {
                 <Input type='number' name='quantity' id='quantity' value={quantity} onChange={handleChange} />
             </FormGroup>
             <FormGroup>
-                <Button color='primary' type='submit'>{submitText}</Button>
+                <Button color='primary' type='submit' hidden={ingredients.length === 0}>{submitText}</Button>
                 <Button color='secondary' type='button' tag={Link} to='/ingredients'>Cancel</Button>
             </FormGroup>
         </Form>

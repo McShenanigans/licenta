@@ -34,13 +34,8 @@ public class IngredientController {
         service.add(dto);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public void update(@RequestBody IngredientEntityDto dto){
         service.update(dto);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable("id") Long id){
-        service.delete(id);
     }
 }

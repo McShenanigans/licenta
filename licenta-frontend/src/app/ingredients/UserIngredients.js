@@ -22,7 +22,8 @@ function UserIngredients() {
     }, [ingredients.length]);
 
     const doRemove = (id) => {
-        console.log('deleted ' + id);
+        axios.delete('http://localhost:8080/ingredients/delete/' + cookies.user.id + '/' + id);
+        window.location.reload();
     }
 
     const list = ingredients.map(ingredient => {

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +16,5 @@ public class UserDto {
     private String password;
     private String firstName;
     private String lastName;
-    private Set<UserIngredientQuantityDto> userIngredientQuantities;
     private List<RecipeEntityDto> recipes;
 }
