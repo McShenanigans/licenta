@@ -1,5 +1,5 @@
 import '../App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import {useCookies} from 'react-cookie';
@@ -12,7 +12,11 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const [cookies, setCookies] = useCookies(['user']);
+    const [cookies, setCookies] = useCookies();
+
+    useEffect(() => {
+        if(typeof cookies.user !== 'undefined') navigate('/home');
+    }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
