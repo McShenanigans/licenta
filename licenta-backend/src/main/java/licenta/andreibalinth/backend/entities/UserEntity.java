@@ -38,11 +38,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private Set<UserIngredientQuantity> userIngredientQuantities;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_to_recipes",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id")
-    )
-    private List<RecipeEntity> recipes;
+    @OneToMany(mappedBy = "user")
+    private List<UserToRecipeEntity> recipes;
 }

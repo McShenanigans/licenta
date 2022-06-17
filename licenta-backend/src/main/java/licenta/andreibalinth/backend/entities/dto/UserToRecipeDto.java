@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RecipeIngredientQuantityDto {
-    private IngredientEntityDto ingredient;
-    private Double quantity;
+@AllArgsConstructor
+public class UserToRecipeDto {
+    private RecipeEntityDto recipe;
+    private boolean isOwner;
 }

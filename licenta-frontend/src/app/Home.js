@@ -15,6 +15,7 @@ function Home(){
         <div>
             <div>Welcome home!</div>
             <Button size='md' color='primary' tag={Link} to='/ingredients'>Ingredients</Button>
+            <Button size='md' color='secondary' tag={Link} to='/recipes'>Recipes</Button>
         </div>
     )
 }

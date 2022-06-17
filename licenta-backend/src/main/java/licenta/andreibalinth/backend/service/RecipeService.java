@@ -1,14 +1,18 @@
 package licenta.andreibalinth.backend.service;
 
-import licenta.andreibalinth.backend.entities.RecipeEntity;
+import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
+import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RecipeService {
-    List<RecipeEntity> getAll();
-    Optional<RecipeEntity> getById(Long id);
-    void add(RecipeEntity recipe);
-    void update(RecipeEntity recipe);
+    List<RecipeEntityDto> getAll();
+    List<UserToRecipeDto> getAllForUser(Long userId);
+    Optional<RecipeEntityDto> getById(Long id);
+    Optional<UserToRecipeDto> getByIdForUser(Long userId, Long recipeId);
+    void add(RecipeEntityDto recipe);
+    void addForUser(Long userId, UserToRecipeDto dto);
+    void update(RecipeEntityDto recipe);
     void delete(Long id);
 }

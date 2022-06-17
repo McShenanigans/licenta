@@ -35,4 +35,7 @@ public class RecipeEntity {
 
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredientQuantity> quantities;
+
+    @OneToMany(mappedBy = "recipe")
+    private Set<UserToRecipeEntity> users;
 }
