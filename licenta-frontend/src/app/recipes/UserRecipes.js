@@ -42,7 +42,10 @@ function UserRecipes() {
 
     return (<Container fluid>
         <div>
-            <Button color='success' tag={Link} to='/recipes/write'>Write recipe</Button>
+            <ButtonGroup>
+                <Button color='primary' tag={Link} to='/recipes/write'>Write recipe</Button>
+                <Button color='secondary' tag={Link} to='/home'>Go back</Button>
+            </ButtonGroup>
         </div>
         <h3>
             Saved recipes

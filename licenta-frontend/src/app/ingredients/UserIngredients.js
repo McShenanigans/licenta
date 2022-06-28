@@ -43,7 +43,10 @@ function UserIngredients() {
 
     return (<Container fluid>
         <div>
-            <Button color='success' tag={Link} to='/ingredients/create'>Add Ingredient</Button>
+            <ButtonGroup>
+                <Button color='primary' tag={Link} to='/ingredients/create'>Add Ingredient</Button>
+                <Button color='secondary' tag={Link} to='/home'>Go back</Button>
+            </ButtonGroup>
         </div>
         <h3>
             Your ingredients
