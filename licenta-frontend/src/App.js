@@ -8,6 +8,7 @@ import CreateUserIngredient from './app/ingredients/CreateUserIngredient';
 import Ingredients from './admin/ingredients/Ingredients';
 import CreateIngredient from './admin/ingredients/CreateIngredient';
 import UserRecipes from './app/recipes/UserRecipes';
+import WriteRecipe from './app/recipes/WriteRecipe'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 
@@ -24,6 +25,7 @@ function App() {
                     <Route path='/admin/ingredients' element={<Ingredients/>}/>
                     <Route path='/admin/ingredients/:id' element={<CreateIngredient/>}/>
                     <Route path='/recipes' element={<UserRecipes/>}/>
+                    <Route path='/recipes/write' element={<WriteRecipe/>}/>
                 </Routes>
             </Router>
         </CookiesProvider>

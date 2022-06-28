@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserToRecipeMapper {
     UserToRecipeDto userToRecipeEntityToUserToRecipeDto(UserToRecipeEntity entity);
     List<UserToRecipeDto> userToRecipeEntityListTouserToRecipeDtoList(List<UserToRecipeEntity> entities);

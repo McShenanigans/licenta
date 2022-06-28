@@ -57,7 +57,7 @@ public class RecipeServiceImpl implements RecipeService{
         Optional<UserEntity> user = userRepository.findById(userId);
         if(user.isEmpty()) return;
         RecipeEntity recipe = repository.save(recipeMapper.recipeEntityDtoToRecipeEntity(dto.getRecipe()));
-        utrRepository.save(new UserToRecipeEntity(user.get(), recipe, true));
+        utrRepository.save(new UserToRecipeEntity(user.get(), recipe, dto.isOwner()));
     }
 
     @Override

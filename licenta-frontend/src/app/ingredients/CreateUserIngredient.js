@@ -48,7 +48,6 @@ function CreateUserIngredient() {
     }
 
     const handleSubmit = () => {
-        console.log(submitUrl);
         axios.post(submitUrl, {
             user: null,
             ingredient: ingredient,
