@@ -74,4 +74,15 @@ public class RecipeServiceImpl implements RecipeService{
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteForUser(Long userId, Long recipeId) {
+        Optional<UserToRecipeEntity> utrOpt = utrRepository.findByUser_IdAndRecipe_Id(userId, recipeId);
+        if(utrOpt.isEmpty()) return;
+        if(utrOpt.get().isOwner()) {
+            utrRepository.findAllByRecipe_Id(recipeId).forEach(utrRepository::delete);
+            repository.delete(utrOpt.get().getRecipe());
+        }
+        else utrRepository.delete(utrOpt.get());
+    }
 }

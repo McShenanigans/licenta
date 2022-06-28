@@ -21,13 +21,20 @@ function UserRecipes() {
         doGetAll();
     }, [recipes.length]);
 
+    const handleDelete = (recipeId) => {
+        axios.delete('http://localhost:8080/recipe/delete/' + cookies.user.id + '/' + recipeId)
+        .then(
+            navigate('/recipes')
+        );
+    }
+
     const list = recipes.map(userToRecipe => {
         return <div key={userToRecipe.recipe.id}>
             <div>{userToRecipe.recipe.name}</div>
             <div>
                 <ButtonGroup>
                     <Button size='sm' color='primary' hidden={userToRecipe.owner === false}>Edit</Button>
-                    <Button size='sm' color='danger'>Delete</Button>
+                    <Button size='sm' color='danger' onClick={() => handleDelete(userToRecipe.recipe.id)}>Delete</Button>
                 </ButtonGroup>
             </div>
         </div>

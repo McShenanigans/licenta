@@ -15,4 +15,5 @@ public interface RecipeService {
     void addForUser(Long userId, UserToRecipeDto dto);
     void update(RecipeEntityDto recipe);
     void delete(Long id);
+    void deleteForUser(Long userId, Long recipeId);
 }

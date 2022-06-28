@@ -28,4 +28,9 @@ public class RecipeController {
     public void addRecipeToUser(@PathVariable("userId") Long userId, @RequestBody UserToRecipeDto dto){
         service.addForUser(userId, dto);
     }
+
+    @DeleteMapping("/delete/{userId}/{recipeId}")
+    public void deleteRecipeFromUser(@PathVariable("userId") Long userId, @PathVariable("recipeId") Long recipeId){
+        service.deleteForUser(userId, recipeId);
+    }
 }
