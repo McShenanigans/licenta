@@ -1,5 +1,6 @@
 package licenta.andreibalinth.backend.controller;
 
+import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
 import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 import licenta.andreibalinth.backend.service.RecipeService;
 import lombok.AllArgsConstructor;
@@ -32,5 +33,10 @@ public class RecipeController {
     @DeleteMapping("/delete/{userId}/{recipeId}")
     public void deleteRecipeFromUser(@PathVariable("userId") Long userId, @PathVariable("recipeId") Long recipeId){
         service.deleteForUser(userId, recipeId);
+    }
+
+    @PutMapping("/update")
+    public void updateRecipeOfUser(@RequestBody RecipeEntityDto dto){
+        service.update(dto);
     }
 }

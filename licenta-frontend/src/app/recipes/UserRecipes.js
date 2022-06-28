@@ -33,7 +33,7 @@ function UserRecipes() {
             <div>{userToRecipe.recipe.name}</div>
             <div>
                 <ButtonGroup>
-                    <Button size='sm' color='primary' hidden={userToRecipe.owner === false}>Edit</Button>
+                    <Button size='sm' color='primary' hidden={userToRecipe.owner === false} tag={Link} to={'/recipes/'+userToRecipe.recipe.id}>Edit</Button>
                     <Button size='sm' color='danger' onClick={() => handleDelete(userToRecipe.recipe.id)}>Delete</Button>
                 </ButtonGroup>
             </div>

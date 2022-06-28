@@ -1,6 +1,6 @@
 import {useCookies} from 'react-cookie';
 import {useEffect, useState} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate, Link, useParams} from 'react-router-dom';
 import Select from 'react-select';
 import {Button, ButtonGroup, Container, Input, Form, FormGroup, Label} from 'reactstrap';
 import axios from 'axios'
@@ -12,17 +12,40 @@ function WriteRecipe(){
     const [selectedIngredient, setSelectedIngredient] = useState(null);
     const [description, setDescription] = useState("");
     const [name, setName] = useState("");
+    const [recipeId, setRecipeId] = useState(null)
+    const params = useParams();
 
     const navigate = useNavigate();
 
     const doGetAllIngredients = () => {
+        if(typeof cookies.user.id === 'undefined') navigate('/');
         axios.get('http://localhost:8080/admin/ingredients/')
         .then((response) => {
             let options = [];
             response.data.forEach(ingredient => {
                 options.push({value: ingredient, label: ingredient.name});
             });
-            setAvailalbleIngredients(options);
+            if(params.id !== 'write'){
+                axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
+                    if(response.data === null) navigate('/404');
+                    setRecipeId(response.data.recipe.id);
+                    setName(response.data.recipe.name);
+                    setDescription(response.data.recipe.description);
+                    setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
+                    response.data.recipe.quantities.forEach(quantity => {
+                        let index = -1;
+                        for (let i = 0; i < options.length; i++){
+                            if(options[i].value.id === quantity.ingredient.id) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        if(index > -1) options.splice(index, 1);
+                    })
+                    setAvailalbleIngredients(options);
+                })
+            }
+            else setAvailalbleIngredients(options);
         })
     }
 
@@ -120,10 +143,15 @@ function WriteRecipe(){
     }
 
     const handleSubmit = () => {
+        if (params.id === 'write') doAddRecipe();
+        else doUpdateRecipe();
+    }
+
+    const doAddRecipe = () => {
         let submitUrl = 'http://localhost:8080/recipe/add/' + cookies.user.id;
         axios.post(submitUrl, {
             recipe: {
-                id: null,
+                id: recipeId,
                 name: name,
                 description: description,
                 tags: [],
@@ -135,11 +163,24 @@ function WriteRecipe(){
         );
     }
 
+    const doUpdateRecipe = () => {
+        let submitUrl = 'http://localhost:8080/recipe/update';
+        axios.put(submitUrl, {
+            id: recipeId,
+            name: name,
+            description: description,
+            tags: [],
+            quantities: selectedIngredientsAndQuantities
+        }).then(
+            navigate('/recipes')
+        );
+    }
+
     return (
         <Container>
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
-                    <Input type='text' placeholder='Name your recipe...' onChange={handleNameChange}/>
+                    <Input type='text' placeholder='Name your recipe...' defaultValue={name} onChange={handleNameChange}/>
                 </FormGroup>
                 <FormGroup>
                     <Label for='ingredientSelect'>Add a new ingredient from here</Label>
@@ -151,7 +192,7 @@ function WriteRecipe(){
                 </FormGroup>
                 <FormGroup>
                     <Label>Describe how to cook the recipe here</Label>
-                    <Input id='description' type='textarea' onChange={handleDescriptionChange} rows={10}/>
+                    <Input id='description' type='textarea' onChange={handleDescriptionChange} rows={10} defaultValue={description}/>
                 </FormGroup>
                 <ButtonGroup>
                     <Button type='submit' color='success' hidden={isSubmitAvailable()}>Submit</Button>

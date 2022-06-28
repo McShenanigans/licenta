@@ -4,7 +4,9 @@ import licenta.andreibalinth.backend.entities.RecipeEntity;
 import licenta.andreibalinth.backend.entities.RecipeIngredientQuantity;
 import licenta.andreibalinth.backend.entities.UserEntity;
 import licenta.andreibalinth.backend.entities.UserToRecipeEntity;
+import licenta.andreibalinth.backend.entities.dto.IngredientEntityDto;
 import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
+import licenta.andreibalinth.backend.entities.dto.RecipeIngredientQuantityDto;
 import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 import licenta.andreibalinth.backend.entities.embeddingKeys.RecipeQuantityKey;
 import licenta.andreibalinth.backend.mappers.RecipeIngredientQuantityMapper;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +91,28 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeEntity savedRecipe = recipeOpt.get();
         savedRecipe.setName(recipe.getName());
         savedRecipe.setDescription(recipe.getDescription());
+
+        recipe.getQuantities().forEach(recipeQuantity -> {
+            Optional<RecipeIngredientQuantity> rtqOpt = rtiRepository.findAllByRecipe_IdAndIngredient_Id(savedRecipe.getId(), recipeQuantity.getIngredient().getId());
+            if(rtqOpt.isEmpty()){
+                RecipeIngredientQuantity newRtq = rtiMapper.recipeIngredientQuantityDtoToRecipeIngredientQuantity(recipeQuantity);
+                newRtq.setRecipe(savedRecipe);
+                newRtq.setId(new RecipeQuantityKey(savedRecipe.getId(), recipeQuantity.getIngredient().getId()));
+                rtiRepository.save(newRtq);
+                return;
+            }
+            RecipeIngredientQuantity rtq = rtqOpt.get();
+            rtq.setQuantity(recipeQuantity.getQuantity());
+        });
+
+        Set<Long> remainingIngredientIds = recipe.getQuantities().stream()
+                .map(RecipeIngredientQuantityDto::getIngredient)
+                .map(IngredientEntityDto::getId)
+                .collect(Collectors.toSet());
+        rtiRepository.findAllByRecipe_Id(savedRecipe.getId()).forEach(rtq -> {
+            if(remainingIngredientIds.contains(rtq.getIngredient().getId())) return;
+            rtiRepository.delete(rtq);
+        });
     }
 
     @Override
