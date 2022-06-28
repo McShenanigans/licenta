@@ -22,11 +22,11 @@ function UserRecipes() {
     }, [recipes.length]);
 
     const list = recipes.map(userToRecipe => {
-        return <div key={userToRecipe.recipes.id}>
-            <div>{userToRecipe.recipes.name}</div>
+        return <div key={userToRecipe.recipe.id}>
+            <div>{userToRecipe.recipe.name}</div>
             <div>
                 <ButtonGroup>
-                    <Button size='sm' color='primary'>Edit</Button>
+                    <Button size='sm' color='primary' hidden={userToRecipe.owner === false}>Edit</Button>
                     <Button size='sm' color='danger'>Delete</Button>
                 </ButtonGroup>
             </div>

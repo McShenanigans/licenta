@@ -56,10 +56,11 @@ function WriteRecipe(){
 
     const handleQuantityChange = (event) => {
         if(event.target.value === "") return;
+        console.log(event.target.value);
         let newIngredientsAndQuantities = [];
         selectedIngredientsAndQuantities.forEach(ingredientQuantity => {
             if(ingredientQuantity.ingredient.id == event.target.parentElement.id){
-                ingredientQuantity.quantity = parseInt(event.target.value);
+                ingredientQuantity.quantity = parseFloat(event.target.value);
             }
             newIngredientsAndQuantities.push(ingredientQuantity);
         });
@@ -83,7 +84,7 @@ function WriteRecipe(){
     const quantitiesListForRender = selectedIngredientsAndQuantities.map((ingredientQuantity) => {
         return (<div key={ingredientQuantity.ingredient.id} id={ingredientQuantity.ingredient.id}>
             <div>{ingredientQuantity.ingredient.name}</div>
-            <Input type='number' step='0.01'defaultValue={ingredientQuantity.quantity} onChange={handleQuantityChange}/>
+            <Input type='number' step="0.01" defaultValue={ingredientQuantity.quantity} onChange={handleQuantityChange}/>
             <div>{ingredientQuantity.ingredient.measurementUnit.name}</div>
             <Button color='danger' type='button' onClick={() => unselectIngredient(ingredientQuantity.ingredient)}>Remove</Button>
         </div>
@@ -96,7 +97,7 @@ function WriteRecipe(){
 
     const allQuantitiesAreSet = () => {
         for(let i = 0; i < selectedIngredientsAndQuantities.length; i++){
-            if(selectedIngredientsAndQuantities[i].quantity < 1) return false;
+            if(selectedIngredientsAndQuantities[i].quantity < 0.01) return false;
         }
         return true;
     }
@@ -128,7 +129,7 @@ function WriteRecipe(){
                 tags: [],
                 quantities: selectedIngredientsAndQuantities
             },
-            isOwner: true
+            owner: true
         }).then(
             navigate('/recipes')
         );
