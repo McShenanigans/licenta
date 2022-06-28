@@ -2,13 +2,11 @@ package licenta.andreibalinth.backend.entities;
 
 import licenta.andreibalinth.backend.entities.embeddingKeys.RecipeQuantityKey;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "recipes_to_ingredients")
@@ -28,4 +26,37 @@ public class RecipeIngredientQuantity {
 
     @Column(name = "quantity")
     private Double quantity;
+
+    public RecipeEntity getRecipe() {
+        return recipe;
+    }
+
+    public IngredientEntity getIngredient() {
+        return ingredient;
+    }
+
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public RecipeQuantityKey getId() {
+        return id;
+    }
+
+    public void setRecipe(RecipeEntity recipe) {
+        this.recipe = recipe;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setIngredient(IngredientEntity ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public void setId(RecipeQuantityKey id) {
+        this.id = id;
+    }
 }
