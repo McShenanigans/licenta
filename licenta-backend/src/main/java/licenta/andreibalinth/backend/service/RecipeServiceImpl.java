@@ -1,9 +1,6 @@
 package licenta.andreibalinth.backend.service;
 
-import licenta.andreibalinth.backend.entities.RecipeEntity;
-import licenta.andreibalinth.backend.entities.RecipeIngredientQuantity;
-import licenta.andreibalinth.backend.entities.UserEntity;
-import licenta.andreibalinth.backend.entities.UserToRecipeEntity;
+import licenta.andreibalinth.backend.entities.*;
 import licenta.andreibalinth.backend.entities.dto.IngredientEntityDto;
 import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
 import licenta.andreibalinth.backend.entities.dto.RecipeIngredientQuantityDto;
@@ -11,6 +8,7 @@ import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 import licenta.andreibalinth.backend.entities.embeddingKeys.RecipeQuantityKey;
 import licenta.andreibalinth.backend.mappers.RecipeIngredientQuantityMapper;
 import licenta.andreibalinth.backend.mappers.RecipeMapper;
+import licenta.andreibalinth.backend.mappers.RecipeTagMapper;
 import licenta.andreibalinth.backend.mappers.UserToRecipeMapper;
 import licenta.andreibalinth.backend.repository.RecipeRepository;
 import licenta.andreibalinth.backend.repository.RecipeToIngredientRepository;
@@ -36,6 +34,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserRepository userRepository;
     private final RecipeToIngredientRepository rtiRepository;
     private final RecipeIngredientQuantityMapper rtiMapper;
+    private final RecipeTagMapper rtMapper;
 
     @Override
     public List<RecipeEntityDto> getAll() {
@@ -91,6 +90,7 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeEntity savedRecipe = recipeOpt.get();
         savedRecipe.setName(recipe.getName());
         savedRecipe.setDescription(recipe.getDescription());
+        savedRecipe.setTags(rtMapper.recipeTagEntityDtoListToRecipeTagEntityList(recipe.getTags()));
 
         recipe.getQuantities().forEach(recipeQuantity -> {
             Optional<RecipeIngredientQuantity> rtqOpt = rtiRepository.findAllByRecipe_IdAndIngredient_Id(savedRecipe.getId(), recipeQuantity.getIngredient().getId());

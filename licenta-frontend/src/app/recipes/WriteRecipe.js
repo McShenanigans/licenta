@@ -2,18 +2,27 @@ import {useCookies} from 'react-cookie';
 import {useEffect, useState} from 'react';
 import {useNavigate, Link, useParams} from 'react-router-dom';
 import Select from 'react-select';
-import {Button, ButtonGroup, Container, Input, Form, FormGroup, Label} from 'reactstrap';
+import {Button, ButtonGroup, Container, Input, Form, FormGroup, Label, ButtonToggle} from 'reactstrap';
 import axios from 'axios'
 
 function WriteRecipe(){
+    const privateRecipeStatusText = 'Private';
+    const publicRecipeStatusText = 'Public';
+    const visibilityButtonText = 'Make public';
     const [cookies, setCookies] = useCookies();
     const [availableIngredients, setAvailalbleIngredients] = useState([]);
     const [selectedIngredientsAndQuantities, setSelectedIngredientsAndQuantities] = useState([]);
     const [selectedIngredient, setSelectedIngredient] = useState(null);
+    const [availableTags, setAvailableTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedTag, setSelectedTag] = useState(null);
     const [description, setDescription] = useState("");
     const [name, setName] = useState("");
     const [recipeId, setRecipeId] = useState(null)
+    const [isPublic, setIsPublic] = useState(false);
     const params = useParams();
+    const ingredientIdPrefix = 'ingredient';
+    const tagIdPrefix = 'tag';
 
     const navigate = useNavigate();
 
@@ -25,27 +34,51 @@ function WriteRecipe(){
             response.data.forEach(ingredient => {
                 options.push({value: ingredient, label: ingredient.name});
             });
-            if(params.id !== 'write'){
-                axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
-                    if(response.data === null) navigate('/404');
-                    setRecipeId(response.data.recipe.id);
-                    setName(response.data.recipe.name);
-                    setDescription(response.data.recipe.description);
-                    setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
-                    response.data.recipe.quantities.forEach(quantity => {
-                        let index = -1;
-                        for (let i = 0; i < options.length; i++){
-                            if(options[i].value.id === quantity.ingredient.id) {
-                                index = i;
-                                break;
+            axios.get('http://localhost:8080/recipe/tags').then(responseTags => {
+                let tagOptions = [];
+                responseTags.data.forEach(tag => {
+                    tagOptions.push({value: tag, label: tag.name});
+                });
+                if(params.id !== 'write'){
+                    axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
+                        if(response.data === null) navigate('/404');
+                        
+                        setRecipeId(response.data.recipe.id);
+                        setName(response.data.recipe.name);
+                        setDescription(response.data.recipe.description);
+                        setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
+                        setSelectedTags(response.data.recipe.tags);
+                        
+                        response.data.recipe.quantities.forEach(quantity => {
+                            let index = -1;
+                            for (let i = 0; i < options.length; i++){
+                                if(options[i].value.id === quantity.ingredient.id) {
+                                    index = i;
+                                    break;
+                                }
                             }
-                        }
-                        if(index > -1) options.splice(index, 1);
+                            if(index > -1) options.splice(index, 1);
+                        });
+                        setAvailalbleIngredients(options);
+
+                        response.data.recipe.tags.forEach(tag => {
+                            let index = -1;
+                            for (let i = 0; i < tagOptions.length; i++){
+                                if(tagOptions[i].value.id === tag.id){
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            if(index > -1) tagOptions.splice(index, 1);
+                        });
+                        setAvailableTags(tagOptions);
                     })
+                }
+                else {
                     setAvailalbleIngredients(options);
-                })
-            }
-            else setAvailalbleIngredients(options);
+                    setAvailableTags(tagOptions);
+                }
+            })
         })
     }
 
@@ -77,12 +110,33 @@ function WriteRecipe(){
         setSelectedIngredient(null);
     }
 
+    const handleTagChange = (event) => {
+        let tag = event.value;
+
+        let newSelectedTags = [];
+        newSelectedTags.push(tag);
+        selectedTags.forEach(sTag => {
+            newSelectedTags.push(sTag);
+        })
+        setSelectedTags(newSelectedTags);
+
+        let newAvailableTags = [];
+        availableTags.forEach(aTag => {
+            if(aTag.value.id !== tag.id) {
+                newAvailableTags.push(aTag);
+            }
+        });
+        setAvailableTags(newAvailableTags);
+
+        setSelectedTag(null)
+    }
+
     const handleQuantityChange = (event) => {
         if(event.target.value === "") return;
-        console.log(event.target.value);
         let newIngredientsAndQuantities = [];
         selectedIngredientsAndQuantities.forEach(ingredientQuantity => {
-            if(ingredientQuantity.ingredient.id == event.target.parentElement.id){
+            let idToHandle = parseInt(event.target.parentElement.id.split(ingredientIdPrefix)[1]);
+            if(ingredientQuantity.ingredient.id === idToHandle){
                 ingredientQuantity.quantity = parseFloat(event.target.value);
             }
             newIngredientsAndQuantities.push(ingredientQuantity);
@@ -104,12 +158,35 @@ function WriteRecipe(){
         setAvailalbleIngredients(newAvailableIngredients);
     }
 
+    const unselectTag = (tag) => {
+        let newSelectedTags = [];
+        selectedTags.forEach(sTag => {
+            if(sTag.id !== tag.id) newSelectedTags.push(sTag);
+        })
+        setSelectedTags(newSelectedTags);
+
+        let newAvailableTags = [];
+        newAvailableTags.push({value: tag, label: tag.name});
+        availableTags.forEach(aTag => {
+            newAvailableTags.push(aTag);
+        })
+        setAvailableTags(newAvailableTags);
+    }
+
     const quantitiesListForRender = selectedIngredientsAndQuantities.map((ingredientQuantity) => {
-        return (<div key={ingredientQuantity.ingredient.id} id={ingredientQuantity.ingredient.id}>
+        return (<div key={ingredientIdPrefix + ingredientQuantity.ingredient.id} id={ingredientIdPrefix + ingredientQuantity.ingredient.id}>
             <div>{ingredientQuantity.ingredient.name}</div>
             <Input type='number' step="0.01" defaultValue={ingredientQuantity.quantity} onChange={handleQuantityChange}/>
             <div>{ingredientQuantity.ingredient.measurementUnit.name}</div>
             <Button color='danger' type='button' onClick={() => unselectIngredient(ingredientQuantity.ingredient)}>Remove</Button>
+        </div>
+        )
+    });
+
+    const tagListForRender = selectedTags.map(tag => {
+        return (<div key={tagIdPrefix + tag.id} id={tagIdPrefix + tag.id}>
+            <div>{tag.name}</div>
+            <Button color='danger' type='button' onClick={() => unselectTag(tag)}>X</Button>
         </div>
         )
     });
@@ -147,6 +224,10 @@ function WriteRecipe(){
         else doUpdateRecipe();
     }
 
+    const handleIsPublicChange = () => {
+        setIsPublic(!isPublic);
+    }
+
     const doAddRecipe = () => {
         let submitUrl = 'http://localhost:8080/recipe/add/' + cookies.user.id;
         axios.post(submitUrl, {
@@ -154,7 +235,7 @@ function WriteRecipe(){
                 id: recipeId,
                 name: name,
                 description: description,
-                tags: [],
+                tags: selectedTags,
                 quantities: selectedIngredientsAndQuantities
             },
             owner: true
@@ -169,7 +250,7 @@ function WriteRecipe(){
             id: recipeId,
             name: name,
             description: description,
-            tags: [],
+            tags: selectedTags,
             quantities: selectedIngredientsAndQuantities
         }).then(
             navigate('/recipes')
@@ -183,6 +264,11 @@ function WriteRecipe(){
                     <Input type='text' placeholder='Name your recipe...' defaultValue={name} onChange={handleNameChange}/>
                 </FormGroup>
                 <FormGroup>
+                    <Label for='tagSelect'>Assign tags to your recipe</Label>
+                    <Select id='tagSelect' value={selectedTag} options={availableTags} onChange={handleTagChange}/>
+                    {tagListForRender}
+                </FormGroup>
+                <FormGroup>
                     <Label for='ingredientSelect'>Add a new ingredient from here</Label>
                     <Select id='ingredientSelect' value={selectedIngredient} options={availableIngredients} onChange={handleSelectChange}/>
                 </FormGroup>
@@ -193,6 +279,10 @@ function WriteRecipe(){
                 <FormGroup>
                     <Label>Describe how to cook the recipe here</Label>
                     <Input id='description' type='textarea' onChange={handleDescriptionChange} rows={10} defaultValue={description}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label>Set your recipe's visibility</Label>
+                    <Button type='button' color='primary' onClick={() => handleIsPublicChange()}>{visibilityButtonText}</Button>
                 </FormGroup>
                 <ButtonGroup>
                     <Button type='submit' color='success' hidden={isSubmitAvailable()}>Submit</Button>

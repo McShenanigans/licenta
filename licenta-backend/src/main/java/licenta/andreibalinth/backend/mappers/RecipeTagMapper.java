@@ -11,4 +11,5 @@ public interface RecipeTagMapper {
     RecipeTagEntity recipeTagDtoToRecipeTagEntity(RecipeTagEntityDto dto);
     RecipeTagEntityDto recipeTagEntityToRecipeTagEntityDto(RecipeTagEntity entity);
     List<RecipeTagEntityDto> recipeTagEntityListToRecipeTagEntityDtoList(List<RecipeTagEntity> entities);
+    List<RecipeTagEntity> recipeTagEntityDtoListToRecipeTagEntityList(List<RecipeTagEntityDto> dtos);
 }

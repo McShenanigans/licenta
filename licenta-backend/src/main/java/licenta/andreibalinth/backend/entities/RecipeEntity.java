@@ -25,11 +25,11 @@ public class RecipeEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany
+    @ManyToMany( cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "recipes_to_tags",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+            joinColumns = {@JoinColumn(name = "recipe_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
     private List<RecipeTagEntity> tags;
 
