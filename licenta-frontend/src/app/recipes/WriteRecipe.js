@@ -2,13 +2,14 @@ import {useCookies} from 'react-cookie';
 import {useEffect, useState} from 'react';
 import {useNavigate, Link, useParams} from 'react-router-dom';
 import Select from 'react-select';
-import {Button, ButtonGroup, Container, Input, Form, FormGroup, Label, ButtonToggle} from 'reactstrap';
+import {Button, ButtonGroup, Container, Input, Form, FormGroup, Label} from 'reactstrap';
 import axios from 'axios'
 
 function WriteRecipe(){
-    const privateRecipeStatusText = 'Private';
-    const publicRecipeStatusText = 'Public';
-    const visibilityButtonText = 'Make public';
+    const activeRecipeVisibilityButtonColor = 'success';
+    const inactiveRecipeVisibilityButtonColor = 'secondary';
+    const [privateButtonColor, setPrivateButtonColor] = useState(activeRecipeVisibilityButtonColor);
+    const [publicButtonColor, setPublicButtonColor] = useState(inactiveRecipeVisibilityButtonColor);
     const [cookies, setCookies] = useCookies();
     const [availableIngredients, setAvailalbleIngredients] = useState([]);
     const [selectedIngredientsAndQuantities, setSelectedIngredientsAndQuantities] = useState([]);
@@ -18,7 +19,7 @@ function WriteRecipe(){
     const [selectedTag, setSelectedTag] = useState(null);
     const [description, setDescription] = useState("");
     const [name, setName] = useState("");
-    const [recipeId, setRecipeId] = useState(null)
+    const [recipeId, setRecipeId] = useState(null);
     const [isPublic, setIsPublic] = useState(false);
     const params = useParams();
     const ingredientIdPrefix = 'ingredient';
@@ -42,13 +43,15 @@ function WriteRecipe(){
                 if(params.id !== 'write'){
                     axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
                         if(response.data === null) navigate('/404');
+                        console.log(response.data);
                         
                         setRecipeId(response.data.recipe.id);
                         setName(response.data.recipe.name);
                         setDescription(response.data.recipe.description);
                         setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
                         setSelectedTags(response.data.recipe.tags);
-                        
+                        setIsPublic(response.data.recipe.public);
+
                         response.data.recipe.quantities.forEach(quantity => {
                             let index = -1;
                             for (let i = 0; i < options.length; i++){
@@ -72,6 +75,11 @@ function WriteRecipe(){
                             if(index > -1) tagOptions.splice(index, 1);
                         });
                         setAvailableTags(tagOptions);
+
+                        if(response.data.recipe.isPublic === true){
+                            setPublicButtonColor(activeRecipeVisibilityButtonColor);
+                            setPrivateButtonColor(inactiveRecipeVisibilityButtonColor);
+                        }
                     })
                 }
                 else {
@@ -224,8 +232,15 @@ function WriteRecipe(){
         else doUpdateRecipe();
     }
 
-    const handleIsPublicChange = () => {
-        setIsPublic(!isPublic);
+    const handleIsPublicChange = (value) => {
+        setIsPublic(value);
+        if(value) {
+            setPublicButtonColor(activeRecipeVisibilityButtonColor);
+            setPrivateButtonColor(inactiveRecipeVisibilityButtonColor);
+            return;
+        }
+        setPublicButtonColor(inactiveRecipeVisibilityButtonColor);
+        setPrivateButtonColor(activeRecipeVisibilityButtonColor);
     }
 
     const doAddRecipe = () => {
@@ -235,6 +250,7 @@ function WriteRecipe(){
                 id: recipeId,
                 name: name,
                 description: description,
+                isPublic: isPublic,
                 tags: selectedTags,
                 quantities: selectedIngredientsAndQuantities
             },
@@ -250,6 +266,7 @@ function WriteRecipe(){
             id: recipeId,
             name: name,
             description: description,
+            isPublic: isPublic,
             tags: selectedTags,
             quantities: selectedIngredientsAndQuantities
         }).then(
@@ -282,7 +299,10 @@ function WriteRecipe(){
                 </FormGroup>
                 <FormGroup>
                     <Label>Set your recipe's visibility</Label>
-                    <Button type='button' color='primary' onClick={() => handleIsPublicChange()}>{visibilityButtonText}</Button>
+                    <ButtonGroup>
+                        <Button type='button' color={publicButtonColor} onClick={() => handleIsPublicChange(true)}>Public</Button>
+                        <Button type='button' color={privateButtonColor} onClick={() => handleIsPublicChange(false)}>Private</Button>
+                    </ButtonGroup>
                 </FormGroup>
                 <ButtonGroup>
                     <Button type='submit' color='success' hidden={isSubmitAvailable()}>Submit</Button>

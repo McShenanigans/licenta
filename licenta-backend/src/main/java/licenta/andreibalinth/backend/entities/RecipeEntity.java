@@ -25,6 +25,9 @@ public class RecipeEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "public")
+    private Boolean isPublic;
+
     @ManyToMany( cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "recipes_to_tags",

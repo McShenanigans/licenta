@@ -91,6 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
         savedRecipe.setName(recipe.getName());
         savedRecipe.setDescription(recipe.getDescription());
         savedRecipe.setTags(rtMapper.recipeTagEntityDtoListToRecipeTagEntityList(recipe.getTags()));
+        savedRecipe.setIsPublic(recipe.getIsPublic());
 
         recipe.getQuantities().forEach(recipeQuantity -> {
             Optional<RecipeIngredientQuantity> rtqOpt = rtiRepository.findAllByRecipe_IdAndIngredient_Id(savedRecipe.getId(), recipeQuantity.getIngredient().getId());

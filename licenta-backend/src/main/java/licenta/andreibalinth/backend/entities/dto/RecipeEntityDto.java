@@ -16,4 +16,5 @@ public class RecipeEntityDto {
     private String description;
     private List<RecipeTagEntityDto> tags;
     private Set<RecipeIngredientQuantityDto> quantities;
+    private Boolean isPublic;
 }
