@@ -12,6 +12,7 @@ import WriteRecipe from './app/recipes/WriteRecipe'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 import Page404 from './404';
+import RecipeStore from './app/recipes/RecipeStore';
 
 function App() {
     return (        
@@ -28,6 +29,7 @@ function App() {
                     <Route path='/admin/ingredients/:id' element={<CreateIngredient/>}/>
                     <Route path='/recipes' element={<UserRecipes/>}/>
                     <Route path='/recipes/:id' element={<WriteRecipe/>}/>
+                    <Route path='/store' element={<RecipeStore/>}/>
                 </Routes>
             </Router>
         </CookiesProvider>

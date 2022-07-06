@@ -18,10 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +41,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<UserToRecipeDto> getAllForUser(Long userId) {
         return utrMapper.userToRecipeEntityListTouserToRecipeDtoList(utrRepository.findAllByUser_Id(userId));
+    }
+
+    @Override
+    public List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId) {
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        if(userOpt.isEmpty()) return new ArrayList<>();
+        return recipeMapper.recipeEntityListToRecipeEntityDtoList(
+                utrRepository.findAllByUserIsNotAndRecipe_IsPublic(userOpt.get(), true).stream()
+                        .map(UserToRecipeEntity::getRecipe).collect(Collectors.toList())
+        );
     }
 
     @Override
@@ -114,6 +121,15 @@ public class RecipeServiceImpl implements RecipeService {
             if(remainingIngredientIds.contains(rtq.getIngredient().getId())) return;
             rtiRepository.delete(rtq);
         });
+    }
+
+    @Override
+    public void createConnectionBetweenUserAndRecipe(Long userId, Long recipeId) {
+        Optional<UserEntity> userOpt = userRepository.findById(userId);
+        Optional<RecipeEntity> recipeOpt = repository.findById(recipeId);
+        if (userOpt.isEmpty() || recipeOpt.isEmpty()) return;
+
+        utrRepository.save(new UserToRecipeEntity(userOpt.get(), recipeOpt.get(), false));
     }
 
     @Override

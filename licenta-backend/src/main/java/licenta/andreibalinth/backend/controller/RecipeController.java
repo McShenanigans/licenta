@@ -37,9 +37,20 @@ public class RecipeController {
         return ResponseEntity.ok().body(tagService.getAllByRecipeId(recipeId));
     }
 
+    @GetMapping("/store/{userId}")
+    public ResponseEntity<?> getAllPublicRecipesFromOtherUsers(@PathVariable("userId") Long userId){
+        return ResponseEntity.ok().body(service.getAllPublicRecipesFromOtherUsers(userId));
+    }
+
     @PostMapping("/add/{userId}")
     public ResponseEntity<?> addRecipeToUser(@PathVariable("userId") Long userId, @RequestBody UserToRecipeDto dto){
         service.addForUser(userId, dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/connect/{userId}/{recipeId}")
+    public ResponseEntity<?> createConnectionFromUserToRecipe(@PathVariable("userId") Long userId, @PathVariable("recipeId") Long recipeId){
+        service.createConnectionBetweenUserAndRecipe(userId, recipeId);
         return ResponseEntity.ok().build();
     }
 
