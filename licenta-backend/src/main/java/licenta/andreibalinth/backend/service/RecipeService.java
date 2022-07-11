@@ -1,7 +1,6 @@
 package licenta.andreibalinth.backend.service;
 
-import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
-import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
+import licenta.andreibalinth.backend.entities.dto.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +8,7 @@ import java.util.Optional;
 public interface RecipeService {
     List<RecipeEntityDto> getAll();
     List<UserToRecipeDto> getAllForUser(Long userId);
-    List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId);
+    List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId, RecipeStoreFilterDto filter);
     Optional<RecipeEntityDto> getById(Long id);
     Optional<UserToRecipeDto> getByIdForUser(Long userId, Long recipeId);
     void add(RecipeEntityDto recipe);

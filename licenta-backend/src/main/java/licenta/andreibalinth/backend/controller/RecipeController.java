@@ -1,6 +1,7 @@
 package licenta.andreibalinth.backend.controller;
 
 import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
+import licenta.andreibalinth.backend.entities.dto.RecipeStoreFilterDto;
 import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 import licenta.andreibalinth.backend.service.RecipeService;
 import licenta.andreibalinth.backend.service.RecipeTagService;
@@ -37,9 +38,9 @@ public class RecipeController {
         return ResponseEntity.ok().body(tagService.getAllByRecipeId(recipeId));
     }
 
-    @GetMapping("/store/{userId}")
-    public ResponseEntity<?> getAllPublicRecipesFromOtherUsers(@PathVariable("userId") Long userId){
-        return ResponseEntity.ok().body(service.getAllPublicRecipesFromOtherUsers(userId));
+    @PostMapping("/store/{userId}")
+    public ResponseEntity<?> getAllPublicRecipesFromOtherUsers(@PathVariable("userId") Long userId, @RequestBody RecipeStoreFilterDto filter){
+        return ResponseEntity.ok().body(service.getAllPublicRecipesFromOtherUsers(userId, filter));
     }
 
     @PostMapping("/add/{userId}")

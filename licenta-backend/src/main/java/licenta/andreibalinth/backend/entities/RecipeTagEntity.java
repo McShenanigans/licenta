@@ -20,7 +20,4 @@ public class RecipeTagEntity {
 
     @Column(name = "name")
     private String name;
-
-    @ManyToMany(mappedBy = "tags")
-    private Set<RecipeEntity> recipes;
 }

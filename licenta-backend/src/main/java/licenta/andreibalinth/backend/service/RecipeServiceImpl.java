@@ -1,15 +1,9 @@
 package licenta.andreibalinth.backend.service;
 
 import licenta.andreibalinth.backend.entities.*;
-import licenta.andreibalinth.backend.entities.dto.IngredientEntityDto;
-import licenta.andreibalinth.backend.entities.dto.RecipeEntityDto;
-import licenta.andreibalinth.backend.entities.dto.RecipeIngredientQuantityDto;
-import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
+import licenta.andreibalinth.backend.entities.dto.*;
 import licenta.andreibalinth.backend.entities.embeddingKeys.RecipeQuantityKey;
-import licenta.andreibalinth.backend.mappers.RecipeIngredientQuantityMapper;
-import licenta.andreibalinth.backend.mappers.RecipeMapper;
-import licenta.andreibalinth.backend.mappers.RecipeTagMapper;
-import licenta.andreibalinth.backend.mappers.UserToRecipeMapper;
+import licenta.andreibalinth.backend.mappers.*;
 import licenta.andreibalinth.backend.repository.RecipeRepository;
 import licenta.andreibalinth.backend.repository.RecipeToIngredientRepository;
 import licenta.andreibalinth.backend.repository.UserRepository;
@@ -32,6 +26,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeToIngredientRepository rtiRepository;
     private final RecipeIngredientQuantityMapper rtiMapper;
     private final RecipeTagMapper rtMapper;
+    private final IngredientMapper ingredientMapper;
+    private final RecipeTagMapper recipeTagMapper;
 
     @Override
     public List<RecipeEntityDto> getAll() {
@@ -44,13 +40,31 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId) {
+    public List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId, RecipeStoreFilterDto filter) {
         Optional<UserEntity> userOpt = userRepository.findById(userId);
         if(userOpt.isEmpty()) return new ArrayList<>();
-        return recipeMapper.recipeEntityListToRecipeEntityDtoList(
-                utrRepository.findAllByUserIsNotAndRecipe_IsPublic(userOpt.get(), true).stream()
-                        .map(UserToRecipeEntity::getRecipe).collect(Collectors.toList())
-        );
+        List<RecipeEntity> recipes = utrRepository.findAllByUserIsNotAndRecipe_IsPublic(userOpt.get(), true).stream()
+                .map(UserToRecipeEntity::getRecipe).collect(Collectors.toList());
+        if(!filter.getTags().isEmpty()) {
+            List<RecipeTagEntity> tags = recipeTagMapper.recipeTagEntityDtoListToRecipeTagEntityList(filter.getTags());
+            recipes = recipes.stream()
+                    .filter(recipe -> recipe.getTags().containsAll(tags))
+                    .collect(Collectors.toList());
+        }
+        if(!filter.getIngredients().isEmpty()) {
+            List<IngredientEntity> ingredients = ingredientMapper.ingredientEntityDtoListToIngredientEntityList(filter.getIngredients());
+            recipes = recipes.stream()
+                    .filter(recipe -> recipeHasIngredients(recipe, ingredients))
+                    .collect(Collectors.toList());
+        }
+        return recipeMapper.recipeEntityListToRecipeEntityDtoList(recipes);
+    }
+
+    public boolean recipeHasIngredients(RecipeEntity recipe, List<IngredientEntity> ingredients){
+        return recipe.getQuantities().stream()
+                .map(quantity -> quantity.getIngredient())
+                .collect(Collectors.toList())
+                .containsAll(ingredients);
     }
 
     @Override
