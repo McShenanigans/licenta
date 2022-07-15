@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import Login from './authentication/Login';
 import Register from './authentication/Register';
-import Home from './app/Home';
+import Schedule from './app/schedule/Schedule';
 import UserIngredients from './app/ingredients/UserIngredients';
 import CreateUserIngredient from './app/ingredients/CreateUserIngredient';
 import Ingredients from './admin/ingredients/Ingredients';
@@ -24,7 +24,7 @@ function App() {
                     <Route path='/' element={<Login/>}/>
                     <Route path='/register' element={<Register/>}/>
                     <Route path='/404' element={<Page404/>}/>
-                    <Route path='/home' element={<Home/>}/>
+                    <Route path='/schedule' element={<Schedule/>}/>
                     <Route path='/ingredients' element={<UserIngredients/>}/>
                     <Route path='/ingredients/:id' element={<CreateUserIngredient/>}/>
                     <Route path='/admin/ingredients' element={<Ingredients/>}/>

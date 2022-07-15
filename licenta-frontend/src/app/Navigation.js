@@ -19,7 +19,7 @@ function Navigation() {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav pills>
                         <NavItem>
-                            <NavLink href='http://localhost:3000/home'>Calendar</NavLink>
+                            <NavLink href='http://localhost:3000/schedule'>Schedule</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href='http://localhost:3000/ingredients'>Ingredients</NavLink>

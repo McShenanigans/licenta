@@ -59,7 +59,7 @@ function Login() {
             <div className = "app" >
             <div className = 'login-form' >
             <div className = 'title' > Log In </div> 
-                {isSubmitted ? navigate("/home") : renderForm} </div>
+                {isSubmitted ? navigate("/schedule") : renderForm} </div>
                 <div>
                     <Link to="/register">Don't have an account? Register here!</Link>
                 </div>
