@@ -13,11 +13,13 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {CookiesProvider} from 'react-cookie';
 import Page404 from './404';
 import RecipeStore from './app/recipes/RecipeStore';
+import Navigation from './app/Navigation';
 
 function App() {
     return (        
         <CookiesProvider>
             <Router>
+                <Navigation></Navigation>
                 <Routes>
                     <Route path='/' element={<Login/>}/>
                     <Route path='/register' element={<Register/>}/>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate, Link } from "react-router-dom";
-import { Button, ButtonGroup, Container, Label, Tag } from "reactstrap";
+import { Button, ButtonGroup, Container, Label } from "reactstrap";
 import Select from 'react-select'
 
 function RecipeStore() {
@@ -59,7 +59,7 @@ function RecipeStore() {
 
     const handleTagSelect = (event) => {
         let tag = event.value;
-        
+
         let newSelectedTags = [tag];
         selectedTags.forEach(selectedTag => newSelectedTags.push(selectedTag));
         setSelectedTags(newSelectedTags);
@@ -150,7 +150,6 @@ function RecipeStore() {
     })
 
     return (<Container>
-        <Button tag={Link} to='/home'>Go Back</Button>
         <div>
             <Label>Filter by tag</Label>
             <Select value={null} options={availableTags} onChange={handleTagSelect}/>
