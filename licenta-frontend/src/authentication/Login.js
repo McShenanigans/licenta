@@ -15,7 +15,7 @@ function Login() {
     const [cookies, setCookies] = useCookies();
 
     useEffect(() => {
-        if(typeof cookies.user !== 'undefined') navigate('/home');
+        if(typeof cookies.user !== 'undefined') navigate('/schedule');
     }, []);
 
     const handleSubmit = (event) => {
