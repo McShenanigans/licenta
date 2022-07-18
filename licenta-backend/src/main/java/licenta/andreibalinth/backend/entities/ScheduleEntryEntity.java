@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "schedule_entry")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "schedule_entry")
 public class ScheduleEntryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

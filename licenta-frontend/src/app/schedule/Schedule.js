@@ -17,20 +17,34 @@ function Schedule(){
         .then((response) => {
             setCurrentEntries(response.data);
         });
-    }
+    };
 
     useEffect(() => {
         if(typeof cookie.user === 'undefined') navigate('/');
         doGetAll();
     }, [renderFlag]);
 
+    const flipRenderFlag = () => {
+        setRenderFlag(!renderFlag);
+    };
+
     const entriesRenderList = currentEntries.map(entry => {
         return (<div key={entry.id}>
-            <Button color='danger'>X</Button>
+            <Button color='danger' onClick={() => handleEntryDelete(entry.id)}>X</Button>
             <Label>{entry.recipe.name}</Label>
-            <Label>{entry.data}</Label>
+            <Label>{entry.date}</Label>
         </div>)
-    })
+    });
+
+    const handleModalOnClose = () => {
+        setShowAddEntryModal(false);
+        flipRenderFlag();
+    };
+
+    const handleEntryDelete = (entryId) => {
+        axios.delete('http://localhost:8080/schedule/delete/' + entryId)
+        .then(flipRenderFlag());
+    };
 
     return (
         <div>
@@ -40,10 +54,7 @@ function Schedule(){
             <div>
                 {entriesRenderList}
             </div>
-            <ScheduleModal show={showAddEntryModal} onClose={() => {
-                    setShowAddEntryModal(false);
-                    setRenderFlag(!renderFlag);
-                }}/>
+            <ScheduleModal show={showAddEntryModal} onClose={() => handleModalOnClose()}/>
         </div>
     )
 }
