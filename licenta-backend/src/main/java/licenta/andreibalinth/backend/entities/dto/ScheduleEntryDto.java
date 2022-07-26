@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +12,5 @@ import java.util.Date;
 public class ScheduleEntryDto {
     private Long id;
     private RecipeEntityDto recipe;
-    private Date date;
+    private LocalDateTime date;
 }

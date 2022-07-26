@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +27,5 @@ public class ScheduleEntryEntity {
     private RecipeEntity recipe;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 }
