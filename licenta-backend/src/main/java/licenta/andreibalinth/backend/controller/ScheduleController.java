@@ -19,6 +19,11 @@ public class ScheduleController {
         return ResponseEntity.ok(service.getAllEntriesForUser(userId));
     }
 
+    @GetMapping("/shoppingList/{userId}")
+    public ResponseEntity<?> getShoppingListForUser(@PathVariable("userId") Long userId){
+        return ResponseEntity.ok(service.getShoppingListForUser(userId));
+    }
+
     @PostMapping("/add/{userId}")
     public ResponseEntity<?> addForUser(@PathVariable("userId") Long userId, @RequestBody ScheduleEntryDto dto){
         service.addEntry(dto, userId);

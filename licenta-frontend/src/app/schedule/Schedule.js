@@ -5,11 +5,13 @@ import { Button, ButtonGroup, Label } from 'reactstrap';
 import axios from 'axios';
 import ScheduleModal from './AddScheduleEntryModal';
 import MissingIngredients from './ViewMissingIngredientsModal';
+import ShoppingListModal from './ShoppingListModal';
 
 function Schedule(){
     const [cookie, setCookies] = useCookies();
     const [currentEntries, setCurrentEntries] = useState([]);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
+    const [showShoppingListModal, setShowShoppingListModal] = useState(false);
     const [missingIngredientsModalToShow, setMissingIngredientsModalToShow] = useState(null);
     const [renderFlag, setRenderFlag] = useState(false);
     const navigate = useNavigate();
@@ -63,6 +65,7 @@ function Schedule(){
     const handleModalOnClose = () => {
         setShowAddEntryModal(false);
         setMissingIngredientsModalToShow(null);
+        setShowShoppingListModal(false);
         flipRenderFlag();
     };
 
@@ -95,12 +98,16 @@ function Schedule(){
     return (
         <div>
             <div>
-                <Button color='primary' onClick={() => setShowAddEntryModal(true)}>Schedule a recipe</Button>
+                <ButtonGroup>
+                    <Button color='primary' onClick={() => setShowAddEntryModal(true)}>Schedule a recipe</Button>
+                    <Button color='secondary' onClick={() => setShowShoppingListModal(true)}>See shopping list</Button>
+                </ButtonGroup>
             </div>
             <div>
                 {entriesRenderList}
             </div>
             <ScheduleModal show={showAddEntryModal} onClose={() => handleModalOnClose()}/>
+            <ShoppingListModal  show={showShoppingListModal} onClose={() => handleModalOnClose()}/>
         </div>
     )
 }
