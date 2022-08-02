@@ -47,6 +47,7 @@ const ScheduleModal = props => {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <h4 className="modal-title">Schedule a recipe for a date</h4>
+                    <button onClick={() => props.onClose()}>X</button>
                 </div>
                 <div className="modal-body">
                     <div>

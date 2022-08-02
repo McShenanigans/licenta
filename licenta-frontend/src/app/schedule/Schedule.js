@@ -1,15 +1,16 @@
 import {useCookies} from 'react-cookie';
 import {useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import { Button, Label } from 'reactstrap';
+import { Button, ButtonGroup, Label } from 'reactstrap';
 import axios from 'axios';
 import ScheduleModal from './AddScheduleEntryModal';
-import { type } from '@testing-library/user-event/dist/type';
+import MissingIngredients from './ViewMissingIngredientsModal';
 
 function Schedule(){
     const [cookie, setCookies] = useCookies();
     const [currentEntries, setCurrentEntries] = useState([]);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
+    const [missingIngredientsModalToShow, setMissingIngredientsModalToShow] = useState(null);
     const [renderFlag, setRenderFlag] = useState(false);
     const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ function Schedule(){
             return response;
         });
 
-        client.get("http://localhost:8080/schedule/"+cookie.user.id)
+        client.get("http://localhost:8080/schedule/" + cookie.user.id)
         .then((response) => {
             setCurrentEntries(response.data);
         });
@@ -59,17 +60,9 @@ function Schedule(){
         return hour.toString() + ':' + minutes;
     }
 
-    const entriesRenderList = currentEntries.map(entry => {
-        return (<div key={entry.id}>
-            <Button color='danger' onClick={() => handleEntryDelete(entry.id)}>X</Button>
-            <Label>{entry.recipe.name}</Label>
-            <br/>
-            <Label>{'Scheduled for ' + entry.date.toDateString() + ', at ' + getHourMinutesString(entry.date)}</Label>
-        </div>)
-    });
-
     const handleModalOnClose = () => {
         setShowAddEntryModal(false);
+        setMissingIngredientsModalToShow(null);
         flipRenderFlag();
     };
 
@@ -77,6 +70,27 @@ function Schedule(){
         axios.delete('http://localhost:8080/schedule/delete/' + entryId)
         .then(flipRenderFlag());
     };
+
+    const enableMissingIngredientsModal = (id) => {
+        setMissingIngredientsModalToShow(id);
+        flipRenderFlag();
+    }
+
+    const entriesRenderList = currentEntries.map(complexEntry => {
+        return (<div key={complexEntry.entry.id}>
+            <Label>{complexEntry.entry.recipe.name}</Label>
+            <br/>
+            <Label>{'Scheduled for ' + complexEntry.entry.date.toDateString() + ', at ' + getHourMinutesString(complexEntry.entry.date)}</Label>
+            <ButtonGroup>
+                <Button color='danger' onClick={() => handleEntryDelete(complexEntry.entry.id)}>X</Button>
+                <Button color='primary' hidden={complexEntry.allIngredientsAvailable === true} 
+                    onClick={() => enableMissingIngredientsModal(complexEntry.entry.id)}>
+                    See the ingredients you are missing
+                </Button>
+            </ButtonGroup>
+            <MissingIngredients show={missingIngredientsModalToShow === complexEntry.entry.id} onClose={() => handleModalOnClose()} missingIngredients={complexEntry.missingIngredients}/>
+        </div>)
+    });
 
     return (
         <div>

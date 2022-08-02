@@ -1,8 +1,10 @@
 package licenta.andreibalinth.backend.service;
 
-import licenta.andreibalinth.backend.entities.ScheduleEntryEntity;
-import licenta.andreibalinth.backend.entities.UserEntity;
+import licenta.andreibalinth.backend.entities.*;
+import licenta.andreibalinth.backend.entities.dto.ComplexScheduleEntryDto;
 import licenta.andreibalinth.backend.entities.dto.ScheduleEntryDto;
+import licenta.andreibalinth.backend.entities.dto.UserIngredientQuantityDto;
+import licenta.andreibalinth.backend.mappers.ComplexScheduleEntryMapper;
 import licenta.andreibalinth.backend.mappers.ScheduleEntryMapper;
 import licenta.andreibalinth.backend.repository.ScheduleEntryRepository;
 import licenta.andreibalinth.backend.repository.UserRepository;
@@ -10,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +21,44 @@ import java.util.Optional;
 public class ScheduleServiceImpl implements ScheduleService{
     ScheduleEntryRepository repository;
     UserRepository userRepository;
+    IngredientService ingredientService;
     ScheduleEntryMapper mapper;
+    ComplexScheduleEntryMapper complexScheduleEntryMapper;
 
     @Override
-    public List<ScheduleEntryDto> getAllEntriesForUser(Long userId) {
-        return mapper.scheduleEntryEntityListToScheduleEntryDtoList(repository.findAllByUser_Id(userId));
+    public List<ComplexScheduleEntryDto> getAllEntriesForUser(Long userId) {
+        List<ComplexScheduleEntry> complexEntries = new ArrayList<>();
+        List<UserIngredientQuantityDto> ingredientQuantitiesOfUser = ingredientService.getAllIngredientsOfUser(userId);
+
+        repository.findAllByUser_Id(userId).forEach(entry -> {
+            ComplexScheduleEntry complexEntry = new ComplexScheduleEntry();
+            complexEntry.setEntry(entry);
+            complexEntry.setMissingIngredients(new ArrayList<>());
+            complexEntries.add(complexEntry);
+
+            entry.getRecipe().getQuantities().forEach(ingredientQuantity -> {
+                int indexOfCurrentIngredient = findIndexOfCurrentIngredient(ingredientQuantitiesOfUser, ingredientQuantity.getIngredient());
+
+                if(indexOfCurrentIngredient == -1) complexEntry.getMissingIngredients().add(new IngredientQuantityEntity(ingredientQuantity.getIngredient(), ingredientQuantity.getQuantity()));
+                else if(ingredientQuantitiesOfUser.get(indexOfCurrentIngredient).getQuantity() < ingredientQuantity.getQuantity())
+                    complexEntry.getMissingIngredients().add(new IngredientQuantityEntity(
+                            ingredientQuantity.getIngredient(),
+                            ingredientQuantity.getQuantity() - ingredientQuantitiesOfUser.get(indexOfCurrentIngredient).getQuantity())
+                    );
+                else ingredientQuantitiesOfUser.get(indexOfCurrentIngredient).setQuantity(
+                        ingredientQuantitiesOfUser.get(indexOfCurrentIngredient).getQuantity() - ingredientQuantity.getQuantity()
+                    );
+            });
+
+            complexEntry.setAllIngredientsAvailable(complexEntry.getMissingIngredients().size() == 0);
+        });
+        return complexScheduleEntryMapper.mapEntryListToDtoList(complexEntries);
+    }
+
+    private int findIndexOfCurrentIngredient(List<UserIngredientQuantityDto> ingredientQuantitiesOfUser, IngredientEntity ingredient) {
+        for(int i = 0; i < ingredientQuantitiesOfUser.size(); i++)
+            if(ingredientQuantitiesOfUser.get(i).getIngredient().getId().equals(ingredient.getId())) return i;
+        return -1;
     }
 
     @Override
