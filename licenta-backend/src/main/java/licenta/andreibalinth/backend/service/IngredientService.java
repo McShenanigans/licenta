@@ -1,5 +1,7 @@
 package licenta.andreibalinth.backend.service;
 
+import licenta.andreibalinth.backend.entities.RecipeEntity;
+import licenta.andreibalinth.backend.entities.UserEntity;
 import licenta.andreibalinth.backend.entities.dto.IngredientEntityDto;
 import licenta.andreibalinth.backend.entities.dto.UserIngredientQuantityDto;
 
@@ -18,4 +20,5 @@ public interface IngredientService {
     void updateUserIngredient(UserIngredientQuantityDto dto, Long userId);
     void delete(Long id);
     void deleteUserIngredient(Long userId, Long ingredientId);
+    void removeIngredientQuantitiesFromUser(RecipeEntity recipe, UserEntity user);
 }

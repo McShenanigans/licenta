@@ -11,9 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,6 +96,18 @@ public class IngredientServiceImpl implements IngredientService{
         Optional<UserIngredientQuantity> optionalUiq = uigRepository.findByUserAndIngredient(userRepository.getById(userId), repository.getById(ingredientId));
         if(optionalUiq.isEmpty()) return;
         uigRepository.delete(optionalUiq.get());
+    }
+
+    @Override
+    @Transactional
+    public void removeIngredientQuantitiesFromUser(RecipeEntity recipe, UserEntity user) {
+        Map<IngredientEntity, Double> ingredientQuantityMap = new HashMap<>();
+        recipe.getQuantities().forEach(ingredientQuantity -> ingredientQuantityMap.put(ingredientQuantity.getIngredient(), ingredientQuantity.getQuantity()));
+        user.getUserIngredientQuantities().forEach(uig -> {
+            if(!ingredientQuantityMap.containsKey(uig.getIngredient())) return;
+            if(uig.getQuantity() < ingredientQuantityMap.get(uig.getIngredient())) uig.setQuantity(0.0);
+            else uig.setQuantity(uig.getQuantity() - ingredientQuantityMap.get(uig.getIngredient()));
+        });
     }
 
     @Override

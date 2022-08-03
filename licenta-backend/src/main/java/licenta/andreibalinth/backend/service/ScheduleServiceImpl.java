@@ -1,10 +1,7 @@
 package licenta.andreibalinth.backend.service;
 
 import licenta.andreibalinth.backend.entities.*;
-import licenta.andreibalinth.backend.entities.dto.ComplexScheduleEntryDto;
-import licenta.andreibalinth.backend.entities.dto.IngredientQuantityDto;
-import licenta.andreibalinth.backend.entities.dto.ScheduleEntryDto;
-import licenta.andreibalinth.backend.entities.dto.UserIngredientQuantityDto;
+import licenta.andreibalinth.backend.entities.dto.*;
 import licenta.andreibalinth.backend.mappers.ComplexScheduleEntryMapper;
 import licenta.andreibalinth.backend.mappers.IngredientMapper;
 import licenta.andreibalinth.backend.mappers.ScheduleEntryMapper;
@@ -107,5 +104,17 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public void deleteEntry(Long entryId) {
         repository.deleteById(entryId);
+    }
+
+    @Override
+    public void deleteEntryAndRemoveIngredients(Long entryId, Boolean wasCooked) {
+        ScheduleEntryEntity entry = repository.getById(entryId);
+        RecipeEntity recipe = entry.getRecipe();
+        UserEntity user = entry.getUser();
+
+        repository.deleteById(entryId);
+        if(!wasCooked) return;
+
+        ingredientService.removeIngredientQuantitiesFromUser(recipe, user);
     }
 }

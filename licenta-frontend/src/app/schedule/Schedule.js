@@ -6,10 +6,12 @@ import axios from 'axios';
 import ScheduleModal from './AddScheduleEntryModal';
 import MissingIngredients from './ViewMissingIngredientsModal';
 import ShoppingListModal from './ShoppingListModal';
+import ConfirmRecipeCompletionDialog from './ConfirmRecipeCompletionDialog';
 
 function Schedule(){
     const [cookie, setCookies] = useCookies();
     const [currentEntries, setCurrentEntries] = useState([]);
+    const [idsOfPastEntries, setIdsOfPastEntries] = useState([]);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [showShoppingListModal, setShowShoppingListModal] = useState(false);
     const [missingIngredientsModalToShow, setMissingIngredientsModalToShow] = useState(null);
@@ -27,6 +29,15 @@ function Schedule(){
         client.get("http://localhost:8080/schedule/" + cookie.user.id)
         .then((response) => {
             setCurrentEntries(response.data);
+
+            if(idsOfPastEntries.length > 0) return;
+            
+            let newIdsOfPastEntries = [];
+            let date = new Date();
+            response.data.forEach(complexEntry => {
+                if(complexEntry.entry.date.getTime() < date.getTime()) newIdsOfPastEntries.push(complexEntry.entry.id);
+            });
+            setIdsOfPastEntries(newIdsOfPastEntries);
         });
     };
 
@@ -79,6 +90,15 @@ function Schedule(){
         flipRenderFlag();
     }
 
+    const removeEntry = (entryId) => {
+        let newIdsForPastEntries = [];
+        idsOfPastEntries.forEach(entry => {
+            if(entryId !== entry) newIdsForPastEntries.push(entry);
+        });
+        setIdsOfPastEntries(newIdsForPastEntries);
+        flipRenderFlag();
+    }
+
     const entriesRenderList = currentEntries.map(complexEntry => {
         return (<div key={complexEntry.entry.id}>
             <Label>{complexEntry.entry.recipe.name}</Label>
@@ -92,6 +112,11 @@ function Schedule(){
                 </Button>
             </ButtonGroup>
             <MissingIngredients show={missingIngredientsModalToShow === complexEntry.entry.id} onClose={() => handleModalOnClose()} missingIngredients={complexEntry.missingIngredients}/>
+            <ConfirmRecipeCompletionDialog
+                show={idsOfPastEntries.indexOf(complexEntry.entry.id) !== -1} 
+                entry={complexEntry.entry} date={complexEntry.entry.date.toDateString() + ', ' + getHourMinutesString(complexEntry.entry.date)}
+                onClose={() => removeEntry(complexEntry.entry.id)}
+            />
         </div>)
     });
 

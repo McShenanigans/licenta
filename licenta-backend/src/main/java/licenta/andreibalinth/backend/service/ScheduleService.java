@@ -12,4 +12,5 @@ public interface ScheduleService {
     void addEntry(ScheduleEntryDto dto, Long userId);
     void updateEntry(ScheduleEntryDto dto);
     void deleteEntry(Long entryId);
+    void deleteEntryAndRemoveIngredients(Long entryId, Boolean wasCooked);
 }

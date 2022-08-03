@@ -41,4 +41,10 @@ public class ScheduleController {
         service.deleteEntry(entryId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/delete/{entryId}/{wasCooked}")
+    public ResponseEntity<?> deleteAfterCooked(@PathVariable("entryId") Long entryId, @PathVariable("wasCooked") Boolean wasCooked){
+        service.deleteEntryAndRemoveIngredients(entryId, wasCooked);
+        return ResponseEntity.ok().build();
+    }
 }
