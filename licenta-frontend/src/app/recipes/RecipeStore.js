@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Container, Label } from "reactstrap";
 import Select from 'react-select'
+import RecipeDetailsModal from "./RecipeDetailsModal";
 
 function RecipeStore() {
     const [availableRecipes, setAvailableRecipes] = useState([]);
@@ -12,11 +13,12 @@ function RecipeStore() {
     const [selectedTags, setSelectedTags] = useState([]);
     const [availableIngredients, setAvailableIngredients] = useState([]);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
+    const [detailsModalToShow, setDetailsModalToShow] = useState(null);
     const [cookies, setCookies] = useCookies();
     const navigate = useNavigate();
 
     const getAll = () => {
-        if(availableTags.length === 0 && selectedTags.length === 0){
+        if(availableTags.length === 0 && selectedTags.length === 0) {
             axios.get('http://localhost:8080/recipe/tags').then((response) => {
                 let newTags = [];
                 response.data.forEach(tag => {
@@ -25,7 +27,7 @@ function RecipeStore() {
                 setAvailableTags(newTags);
             })
         }
-        if(availableIngredients.length === 0 && selectedIngredients.length === 0){
+        if(availableIngredients.length === 0 && selectedIngredients.length === 0) {
             axios.get('http://localhost:8080/admin/ingredients/').then((response) => {
                 let newIngredients = [];
                 response.data.forEach(ingredient => {
@@ -117,16 +119,22 @@ function RecipeStore() {
         triggerRender();
     }
 
+    const handleDetailsModalOnClose = () => {
+        setDetailsModalToShow(null);
+        triggerRender();
+    }
+
     const recipeRenderList = availableRecipes.map(recipe => {
         return (
             <div key={recipe.id}>
                 <Label>{recipe.name}</Label>
                 <div>
                     <ButtonGroup>
-                        <Button size='sm' color='primary'>Details</Button>
+                        <Button size='sm' color='primary' onClick={() => setDetailsModalToShow(recipe.id)}>Details</Button>
                         <Button size='sm' color='success' onClick={() => handleAddToCookbook(recipe.id)}>Add To Cookbook</Button>
                     </ButtonGroup>
                 </div>
+                <RecipeDetailsModal recipe={recipe} show={detailsModalToShow === recipe.id} onClose={() => handleDetailsModalOnClose()}/>
             </div>
         );
     });

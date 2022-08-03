@@ -3,11 +3,13 @@ import {useEffect, useState} from 'react'
 import {useNavigate, Link} from 'react-router-dom';
 import {Button, ButtonGroup, Container} from 'reactstrap';
 import axios from 'axios';
+import QuickAdd from './QuickAdd';
 
 function UserIngredients() {
     const [cookies, setCookies] = useCookies();
     const navigate = useNavigate();
     const [ingredients, setIngredients] = useState([]);
+    const [renderFlag, setRenderFlag] = useState(false);
 
     const doGetAll = () => {
         axios.get('http://localhost:8080/ingredients/'+cookies.user.id)
@@ -19,11 +21,15 @@ function UserIngredients() {
     useEffect(() => {
         if(typeof cookies.user === 'undefined') navigate('/');
         doGetAll();
-    }, [ingredients.length]);
+    }, [renderFlag]);
 
     const doRemove = (id) => {
         axios.delete('http://localhost:8080/ingredients/delete/' + cookies.user.id + '/' + id);
-        window.location.reload();
+        flipRenderFlag();
+    }
+
+    const flipRenderFlag = () => {
+        setRenderFlag(!renderFlag);
     }
 
     const list = ingredients.map(ingredient => {
@@ -38,6 +44,7 @@ function UserIngredients() {
                     <Button size='sm' color='danger' onClick={() => {doRemove(ingredient.ingredient.id)}}>Delete</Button>
                 </ButtonGroup>
             </div>
+            <QuickAdd ingredient={ingredient.ingredient} quantity={ingredient.quantity} triggerRender={() => flipRenderFlag()}/>
         </div>
     })
 
