@@ -43,8 +43,11 @@ public class RecipeServiceImpl implements RecipeService {
     public List<RecipeEntityDto> getAllPublicRecipesFromOtherUsers(Long userId, RecipeStoreFilterDto filter) {
         Optional<UserEntity> userOpt = userRepository.findById(userId);
         if(userOpt.isEmpty()) return new ArrayList<>();
+        List<RecipeEntity> recipesOfUser = utrRepository.findAllByUser_Id(userId).stream().map(UserToRecipeEntity::getRecipe).collect(Collectors.toList());
         List<RecipeEntity> recipes = utrRepository.findAllByUserIsNotAndRecipe_IsPublic(userOpt.get(), true).stream()
-                .map(UserToRecipeEntity::getRecipe).collect(Collectors.toList());
+                .map(UserToRecipeEntity::getRecipe)
+                .filter(recipe -> !recipesOfUser.contains(recipe))
+                .collect(Collectors.toList());
         if(!filter.getTags().isEmpty()) {
             List<RecipeTagEntity> tags = recipeTagMapper.recipeTagEntityDtoListToRecipeTagEntityList(filter.getTags());
             recipes = recipes.stream()
