@@ -23,7 +23,6 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Login/>}/>
                     <Route path='/register' element={<Register/>}/>
-                    <Route path='/404' element={<Page404/>}/>
                     <Route path='/schedule' element={<Schedule/>}/>
                     <Route path='/ingredients' element={<UserIngredients/>}/>
                     <Route path='/ingredients/:id' element={<CreateUserIngredient/>}/>
@@ -32,6 +31,7 @@ function App() {
                     <Route path='/recipes' element={<UserRecipes/>}/>
                     <Route path='/recipes/:id' element={<WriteRecipe/>}/>
                     <Route path='/store' element={<RecipeStore/>}/>
+                    <Route path='*' element={<Page404/>}/>
                 </Routes>
             </Router>
         </CookiesProvider>

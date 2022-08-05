@@ -28,6 +28,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeTagMapper rtMapper;
     private final IngredientMapper ingredientMapper;
     private final RecipeTagMapper recipeTagMapper;
+    private final RecipeTimeTagMapper recipeTimeTagMapper;
 
     @Override
     public List<RecipeEntityDto> getAll() {
@@ -116,6 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
         savedRecipe.setDescription(recipe.getDescription());
         savedRecipe.setTags(rtMapper.recipeTagEntityDtoListToRecipeTagEntityList(recipe.getTags()));
         savedRecipe.setIsPublic(recipe.getIsPublic());
+        savedRecipe.setTimeTag(recipeTimeTagMapper.toEntity(recipe.getTimeTag()));
 
         recipe.getQuantities().forEach(recipeQuantity -> {
             Optional<RecipeIngredientQuantity> rtqOpt = rtiRepository.findAllByRecipe_IdAndIngredient_Id(savedRecipe.getId(), recipeQuantity.getIngredient().getId());

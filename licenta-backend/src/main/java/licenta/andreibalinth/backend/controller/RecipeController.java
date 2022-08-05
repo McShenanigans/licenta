@@ -5,6 +5,7 @@ import licenta.andreibalinth.backend.entities.dto.RecipeStoreFilterDto;
 import licenta.andreibalinth.backend.entities.dto.UserToRecipeDto;
 import licenta.andreibalinth.backend.service.RecipeService;
 import licenta.andreibalinth.backend.service.RecipeTagService;
+import licenta.andreibalinth.backend.service.TimeTagService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class RecipeController {
     private final RecipeService service;
     private final RecipeTagService tagService;
+    private final TimeTagService timeTagService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getAllForUser(@PathVariable("userId") Long userId){
@@ -31,6 +33,11 @@ public class RecipeController {
     @GetMapping("/tags")
     public ResponseEntity<?> getAllRecipeTags(){
         return ResponseEntity.ok().body(tagService.getAll());
+    }
+
+    @GetMapping("/timeTags")
+    public ResponseEntity<?> getAllRecipeTimeTags() {
+        return ResponseEntity.ok().body(timeTagService.getAll());
     }
 
     @GetMapping("/tags/{recipeId}")

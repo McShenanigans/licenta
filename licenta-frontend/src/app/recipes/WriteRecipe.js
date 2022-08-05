@@ -21,6 +21,8 @@ function WriteRecipe(){
     const [name, setName] = useState("");
     const [recipeId, setRecipeId] = useState(null);
     const [isPublic, setIsPublic] = useState(false);
+    const [timeTagSelectList, setTimeTagSelectList] = useState([]);
+    const [selectedTimeTag, setSelectedTimeTag] = useState(null);
     const params = useParams();
     const ingredientIdPrefix = 'ingredient';
     const tagIdPrefix = 'tag';
@@ -40,52 +42,55 @@ function WriteRecipe(){
                 responseTags.data.forEach(tag => {
                     tagOptions.push({value: tag, label: tag.name});
                 });
-                if(params.id !== 'write'){
-                    axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
-                        if(response.data === null) navigate('/404');
-                        console.log(response.data);
-                        
-                        setRecipeId(response.data.recipe.id);
-                        setName(response.data.recipe.name);
-                        setDescription(response.data.recipe.description);
-                        setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
-                        setSelectedTags(response.data.recipe.tags);
-                        setIsPublic(response.data.recipe.public);
+                axios.get('http://localhost:8080/recipe/timeTags').then(responseTimeTags => {
+                    setTimeTagSelectList(responseTimeTags.data);
+                    if(params.id !== 'write'){
+                        axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
+                            if(response.data === null) navigate('/404');
 
-                        response.data.recipe.quantities.forEach(quantity => {
-                            let index = -1;
-                            for (let i = 0; i < options.length; i++){
-                                if(options[i].value.id === quantity.ingredient.id) {
-                                    index = i;
-                                    break;
+                            setRecipeId(response.data.recipe.id);
+                            setName(response.data.recipe.name);
+                            setDescription(response.data.recipe.description);
+                            setSelectedIngredientsAndQuantities(response.data.recipe.quantities);
+                            setSelectedTags(response.data.recipe.tags);
+                            setIsPublic(response.data.recipe.public);
+                            setSelectedTimeTag(response.data.recipe.timeTag);
+    
+                            response.data.recipe.quantities.forEach(quantity => {
+                                let index = -1;
+                                for (let i = 0; i < options.length; i++){
+                                    if(options[i].value.id === quantity.ingredient.id) {
+                                        index = i;
+                                        break;
+                                    }
                                 }
+                                if(index > -1) options.splice(index, 1);
+                            });
+                            setAvailalbleIngredients(options);
+    
+                            response.data.recipe.tags.forEach(tag => {
+                                let index = -1;
+                                for (let i = 0; i < tagOptions.length; i++){
+                                    if(tagOptions[i].value.id === tag.id){
+                                        index = i;
+                                        break;
+                                    }
+                                }
+                                if(index > -1) tagOptions.splice(index, 1);
+                            });
+                            setAvailableTags(tagOptions);
+    
+                            if(response.data.recipe.isPublic === true){
+                                setPublicButtonColor(activeRecipeVisibilityButtonColor);
+                                setPrivateButtonColor(inactiveRecipeVisibilityButtonColor);
                             }
-                            if(index > -1) options.splice(index, 1);
-                        });
+                        })
+                    }
+                    else {
                         setAvailalbleIngredients(options);
-
-                        response.data.recipe.tags.forEach(tag => {
-                            let index = -1;
-                            for (let i = 0; i < tagOptions.length; i++){
-                                if(tagOptions[i].value.id === tag.id){
-                                    index = i;
-                                    break;
-                                }
-                            }
-                            if(index > -1) tagOptions.splice(index, 1);
-                        });
                         setAvailableTags(tagOptions);
-
-                        if(response.data.recipe.isPublic === true){
-                            setPublicButtonColor(activeRecipeVisibilityButtonColor);
-                            setPrivateButtonColor(inactiveRecipeVisibilityButtonColor);
-                        }
-                    })
-                }
-                else {
-                    setAvailalbleIngredients(options);
-                    setAvailableTags(tagOptions);
-                }
+                    }
+                })
             })
         })
     }
@@ -199,6 +204,10 @@ function WriteRecipe(){
         )
     });
 
+    const timeTagListForRender = timeTagSelectList.map(timeTag => {
+        return <Button color={selectedTimeTag !== null && selectedTimeTag.id === timeTag.id ? 'primary' : 'secondary'} type='button' onClick={() => setSelectedTimeTag(timeTag)}>{timeTag.name}</Button>
+    })
+
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     }
@@ -219,7 +228,8 @@ function WriteRecipe(){
             selectedIngredientsAndQuantities.length > 0 && 
             textIsValid(description) &&
             textIsValid(name) &&
-            allQuantitiesAreSet()
+            allQuantitiesAreSet() &&
+            selectedTimeTag !== null
             );
     }
 
@@ -252,7 +262,8 @@ function WriteRecipe(){
                 description: description,
                 isPublic: isPublic,
                 tags: selectedTags,
-                quantities: selectedIngredientsAndQuantities
+                quantities: selectedIngredientsAndQuantities,
+                timeTag: selectedTimeTag
             },
             owner: true
         }).then(
@@ -268,7 +279,8 @@ function WriteRecipe(){
             description: description,
             isPublic: isPublic,
             tags: selectedTags,
-            quantities: selectedIngredientsAndQuantities
+            quantities: selectedIngredientsAndQuantities,
+            timeTag: selectedTimeTag
         }).then(
             navigate('/recipes')
         );
@@ -284,6 +296,10 @@ function WriteRecipe(){
                     <Label for='tagSelect'>Assign tags to your recipe</Label>
                     <Select id='tagSelect' value={selectedTag} options={availableTags} onChange={handleTagChange}/>
                     {tagListForRender}
+                </FormGroup>
+                <FormGroup>
+                    <Label>At what time should this recipe be eaten?</Label><br/>
+                    <ButtonGroup>{timeTagListForRender}</ButtonGroup>
                 </FormGroup>
                 <FormGroup>
                     <Label for='ingredientSelect'>Add a new ingredient from here</Label>

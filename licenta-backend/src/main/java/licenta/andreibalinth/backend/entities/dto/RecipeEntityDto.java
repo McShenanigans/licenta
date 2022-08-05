@@ -17,4 +17,5 @@ public class RecipeEntityDto {
     private List<RecipeTagEntityDto> tags;
     private Set<RecipeIngredientQuantityDto> quantities;
     private Boolean isPublic;
+    private RecipeTimeTagDto timeTag;
 }

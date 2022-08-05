@@ -41,4 +41,8 @@ public class RecipeEntity {
 
     @OneToMany(mappedBy = "recipe")
     private Set<UserToRecipeEntity> users;
+
+    @ManyToOne
+    @JoinColumn(name = "time_tag_id")
+    private RecipeTimeTagEntity timeTag;
 }
