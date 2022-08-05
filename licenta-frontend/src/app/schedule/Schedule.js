@@ -7,6 +7,7 @@ import ScheduleModal from './AddScheduleEntryModal';
 import MissingIngredients from './ViewMissingIngredientsModal';
 import ShoppingListModal from './ShoppingListModal';
 import ConfirmRecipeCompletionDialog from './ConfirmRecipeCompletionDialog';
+import AutomaticSchedulerModal from './AutomaticSchedulerModal';
 
 function Schedule(){
     const [cookie, setCookies] = useCookies();
@@ -14,6 +15,7 @@ function Schedule(){
     const [idsOfPastEntries, setIdsOfPastEntries] = useState([]);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [showShoppingListModal, setShowShoppingListModal] = useState(false);
+    const [showAutomaticSchedulerModal, setShowAutomaticSchedulerModal] = useState(false);
     const [missingIngredientsModalToShow, setMissingIngredientsModalToShow] = useState(null);
     const [renderFlag, setRenderFlag] = useState(false);
     const navigate = useNavigate();
@@ -77,6 +79,7 @@ function Schedule(){
         setShowAddEntryModal(false);
         setMissingIngredientsModalToShow(null);
         setShowShoppingListModal(false);
+        setShowAutomaticSchedulerModal(false);
         flipRenderFlag();
     };
 
@@ -126,6 +129,7 @@ function Schedule(){
                 <ButtonGroup>
                     <Button color='primary' onClick={() => setShowAddEntryModal(true)}>Schedule a recipe</Button>
                     <Button color='secondary' onClick={() => setShowShoppingListModal(true)}>See shopping list</Button>
+                    <Button color='success' onClick={() => setShowAutomaticSchedulerModal(true)}>Open the automatic recipe scheduler</Button>
                 </ButtonGroup>
             </div>
             <div>
@@ -133,6 +137,7 @@ function Schedule(){
             </div>
             <ScheduleModal show={showAddEntryModal} onClose={() => handleModalOnClose()}/>
             <ShoppingListModal  show={showShoppingListModal} onClose={() => handleModalOnClose()}/>
+            <AutomaticSchedulerModal show={showAutomaticSchedulerModal} onClose={() => handleModalOnClose()}/>
         </div>
     )
 }

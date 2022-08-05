@@ -117,4 +117,9 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         ingredientService.removeIngredientQuantitiesFromUser(recipe, user);
     }
+
+    @Override
+    public void runAutomaticScheduler(AutomaticRecipeSchedulerDto dto) {
+        
+    }
 }

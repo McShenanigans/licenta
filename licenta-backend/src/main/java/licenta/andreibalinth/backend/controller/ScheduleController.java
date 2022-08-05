@@ -1,5 +1,6 @@
 package licenta.andreibalinth.backend.controller;
 
+import licenta.andreibalinth.backend.entities.dto.AutomaticRecipeSchedulerDto;
 import licenta.andreibalinth.backend.entities.dto.ScheduleEntryDto;
 import licenta.andreibalinth.backend.service.ScheduleService;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,12 @@ public class ScheduleController {
     @PostMapping("/add/{userId}")
     public ResponseEntity<?> addForUser(@PathVariable("userId") Long userId, @RequestBody ScheduleEntryDto dto){
         service.addEntry(dto, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/auto")
+    public ResponseEntity<?> runAutomaticRecipeScheduler(@RequestBody AutomaticRecipeSchedulerDto dto){
+        service.runAutomaticScheduler(dto);
         return ResponseEntity.ok().build();
     }
 
