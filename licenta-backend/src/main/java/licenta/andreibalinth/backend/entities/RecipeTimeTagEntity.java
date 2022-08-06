@@ -20,4 +20,7 @@ public class RecipeTimeTagEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "hour")
+    private Integer hour;
 }

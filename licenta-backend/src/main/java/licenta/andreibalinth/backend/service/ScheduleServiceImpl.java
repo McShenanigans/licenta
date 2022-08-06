@@ -5,20 +5,25 @@ import licenta.andreibalinth.backend.entities.dto.*;
 import licenta.andreibalinth.backend.mappers.ComplexScheduleEntryMapper;
 import licenta.andreibalinth.backend.mappers.IngredientMapper;
 import licenta.andreibalinth.backend.mappers.ScheduleEntryMapper;
+import licenta.andreibalinth.backend.repository.RecipeRepository;
 import licenta.andreibalinth.backend.repository.ScheduleEntryRepository;
 import licenta.andreibalinth.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
     ScheduleEntryRepository repository;
     UserRepository userRepository;
+    RecipeRepository recipeRepository;
     IngredientService ingredientService;
+    RecipeService recipeService;
     ScheduleEntryMapper mapper;
     ComplexScheduleEntryMapper complexScheduleEntryMapper;
     IngredientMapper ingredientMapper;
@@ -120,6 +125,33 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Override
     public void runAutomaticScheduler(AutomaticRecipeSchedulerDto dto) {
-        
+        LocalDateTime dateTime = LocalDateTime.now();
+        Random rand = new Random();
+        List<RecipeEntityDto> allRecipes = recipeService.getAllForUser(dto.getUser().getId()).stream()
+                .map(UserToRecipeDto::getRecipe).collect(Collectors.toList());
+        List<RecipeEntityDto> recipes = new ArrayList<>(allRecipes);
+        for(int i = 1; i <= dto.getNumberOfDays(); i++){
+            int finalI = i;
+            dto.getTimeTags().forEach(timeTag -> {
+                LocalDateTime dateTimeForRecipe = dateTime.plusDays(finalI).withMinute(0);
+                if(timeTag.getHour() != null) dateTimeForRecipe = dateTimeForRecipe.withHour(timeTag.getHour());
+                dateTimeForRecipe = dateTimeForRecipe.plusHours(dto.getTimeZoneDifferenceInHours());
+                ScheduleEntryDto entry = new ScheduleEntryDto();
+                entry.setDate(dateTimeForRecipe);
+                entry.setRecipe(findNextRecipeWithTimeTag(recipes, allRecipes, timeTag, rand));
+                addEntry(entry, dto.getUser().getId());
+            });
+        }
+    }
+
+    private RecipeEntityDto findNextRecipeWithTimeTag(List<RecipeEntityDto> recipes, List<RecipeEntityDto> allRecipes, RecipeTimeTagDto timeTag, Random rand) {
+        List<RecipeEntityDto> recipeList = recipes.stream().filter(recipe -> recipe.getTimeTag().getId().equals(timeTag.getId())).collect(Collectors.toList());
+        if(recipeList.size() == 0){
+            recipes = new ArrayList<>(allRecipes);
+            return findNextRecipeWithTimeTag(recipes, allRecipes, timeTag, rand);
+        }
+        RecipeEntityDto recipe = recipeList.get(rand.nextInt(recipeList.size()));
+        recipes.remove(recipe);
+        return recipe;
     }
 }

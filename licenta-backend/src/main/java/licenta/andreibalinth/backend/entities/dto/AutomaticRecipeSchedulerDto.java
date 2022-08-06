@@ -13,4 +13,5 @@ public class AutomaticRecipeSchedulerDto {
     private UserDto user;
     private Integer numberOfDays;
     private List<RecipeTimeTagDto> timeTags;
+    private Integer timeZoneDifferenceInHours;
 }

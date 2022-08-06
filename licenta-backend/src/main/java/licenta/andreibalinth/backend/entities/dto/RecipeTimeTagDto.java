@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class RecipeTimeTagDto {
     private Long id;
     private String name;
+    private Integer hour;
 }

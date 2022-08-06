@@ -54,9 +54,10 @@ const AutomaticSchedulerModal = props => {
         axios.post('http://localhost:8080/schedule/auto', {
             user: cookies.user,
             numberOfDays: numberOfDays,
-            timeTags: selectedTimeTags
+            timeTags: selectedTimeTags,
+            timeZoneDifferenceInHours: new Date().getTimezoneOffset()/60
         }).then(() => {
-            window.localtion.reload();
+            window.location.reload();
         });
     }
 
