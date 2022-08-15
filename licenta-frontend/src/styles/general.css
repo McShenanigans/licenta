@@ -261,6 +261,22 @@
     transition-duration: 0.5s !important;
 }
 
+.button-warning-full {
+    background-color: #ffbc5e !important;
+    border: none !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px  !important;
+    width: 100%;
+    transition-duration: 0.5s !important;
+}
+
+.button-warning-full:hover {
+    background-color: #FF9F1C !important;
+    transition-duration: 0.5s !important;
+}
+
 .button-caution {
     background-color: #ffbc5e !important;
     border: none !important;

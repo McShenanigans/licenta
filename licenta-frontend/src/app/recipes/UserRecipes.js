@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import {Button, Container} from 'reactstrap';
 import axios from 'axios';
+import RecipeDetailsModal from './RecipeDetailsModal.js';
 
 import "../../styles/general.css";
 import "../../styles/recipes.css";
@@ -12,6 +13,7 @@ function UserRecipes() {
     const navigate = useNavigate();
     const [recipes, setRecipes] = useState([]);
     const [visibilityChangeFlag, setVisibilityChangeFlag] = useState(false);
+    const [recipeIDForDetails, setRecipeIdForDetails] = useState(null);
 
     const doGetAll = () => {
         axios.get('http://localhost:8080/recipe/' + cookies.user.id)
@@ -59,6 +61,10 @@ function UserRecipes() {
             <div className='card-extension' hidden={userToRecipe.owner === false}>
                 <Button className={userToRecipe.recipe.isPublic ? 'button-primary' : 'button-secondary'} onClick={() => handleVisibilityChange(userToRecipe.recipe, true)}>Public</Button>
                 <Button className={userToRecipe.recipe.isPublic ? 'button-secondary' : 'button-primary'} onClick={() => handleVisibilityChange(userToRecipe.recipe, false)}>Private</Button>
+            </div>
+            <div className='card-extension' hidden={userToRecipe.owner === true}>
+                <Button className='button-primary-full' onClick={() => setRecipeIdForDetails(userToRecipe.recipe.id)}>Details</Button>
+                <RecipeDetailsModal recipe={userToRecipe.recipe} show={recipeIDForDetails === userToRecipe.recipe.id} onClose={() => setRecipeIdForDetails(null)}/>
             </div>
         </div>
     })

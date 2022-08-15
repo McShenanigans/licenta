@@ -28,7 +28,7 @@ const ConfirmRecipeCompletionDialog = props => {
                         <h5>Ingredients for this recipe will be automatically subtracted from your pantry</h5>
                     </div>
                 </div>
-                <div className="modal-footer">
+                <div className="form-button-area">
                     <Button className="button-primary" onClick={() => handleAnswer(true)}>Yes</Button>
                     <Button className="button-warning" onClick={() => handleAnswer(false)}>No</Button>
                 </div>

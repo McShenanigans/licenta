@@ -11,6 +11,7 @@ import AutomaticSchedulerModal from './AutomaticSchedulerModal';
 
 import "../../styles/general.css";
 import "../../styles/schedule.css";
+import RecipeDetailsModal from '../recipes/RecipeDetailsModal';
 
 function Schedule(){
     const [cookie, setCookies] = useCookies();
@@ -20,6 +21,7 @@ function Schedule(){
     const [showShoppingListModal, setShowShoppingListModal] = useState(false);
     const [showAutomaticSchedulerModal, setShowAutomaticSchedulerModal] = useState(false);
     const [missingIngredientsModalToShow, setMissingIngredientsModalToShow] = useState(null);
+    const [recipeDetailsModalToShow, setRecipeDetailsModalToShow] = useState(null);
     const [renderFlag, setRenderFlag] = useState(false);
     const navigate = useNavigate();
 
@@ -117,6 +119,7 @@ function Schedule(){
                     onClick={() => enableMissingIngredientsModal(complexEntry.entry.id)}>
                     Missing ingredients
                 </Button>
+                <Button className='button-warning-full' onClick={() => {setRecipeDetailsModalToShow(complexEntry.entry.recipe.id)}}>Details</Button>
                 <Button className='button-danger-full' onClick={() => handleEntryDelete(complexEntry.entry.id)}>Cancel</Button>
             </div>
             <MissingIngredients show={missingIngredientsModalToShow === complexEntry.entry.id} onClose={() => handleModalOnClose()} missingIngredients={complexEntry.missingIngredients}/>
@@ -125,6 +128,10 @@ function Schedule(){
                 entry={complexEntry.entry} date={complexEntry.entry.date.toDateString() + ', ' + getHourMinutesString(complexEntry.entry.date)}
                 onClose={() => removeEntry(complexEntry.entry.id)}
             />
+            <RecipeDetailsModal recipe={complexEntry.entry.recipe} show={recipeDetailsModalToShow === complexEntry.entry.recipe.id} onClose={() => {
+                setRecipeDetailsModalToShow(null);
+                flipRenderFlag();
+            }}/>
         </div>)
     });
 
