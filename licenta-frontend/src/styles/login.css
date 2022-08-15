@@ -1,33 +1,36 @@
 .app {
-    font-family: sans-serif;
+    font-family: 'Oxygen', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     gap: 20px;
     height: 100vh;
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-    background-color: #f8f9fd;
+    background-color: #CBF3F0;
 }
 
 input[type="text"],
-input[type="password"] {
-    height: 25px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+input[type="password"],
+input[type="email"] {
+    height: 40px;
+    border: 2px solid rgba(255, 191, 105);
+    border-radius: 10px;
+    padding: 10px;
 }
 
 input[type="submit"] {
     margin-top: 10px;
-    cursor: pointer;
     font-size: 15px;
-    background: #01d28e;
-    border: 1px solid #01d28e;
+    background: #2EC4B6;
+    border: none;
+    border-radius: 10px;
     color: #fff;
     padding: 10px 20px;
 }
 
 input[type="submit"]:hover {
-    background: #6cf0c2;
+    background-color: #FF9F1C;
+    transition-duration: 0.25s;
 }
 
 .button-container {
@@ -38,6 +41,8 @@ input[type="submit"]:hover {
 .login-form {
     background-color: white;
     padding: 2rem;
+    border-radius: 10px;
+    border: 2px solid #FF9F1C;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -46,7 +51,7 @@ input[type="submit"]:hover {
 }
 
 .error {
-    color: red;
+    color: #FF9F1C;
     font-size: 12px;
 }
 
@@ -60,4 +65,20 @@ input[type="submit"]:hover {
     flex-direction: column;
     gap: 8px;
     margin: 10px;
+}
+
+.register-button {
+    background-color: #2EC4B6;
+    font-size: 15px;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.register-button:hover {
+    background-color: #FF9F1C;
+    color: white;
+    transition-duration: 0.25s;
 }

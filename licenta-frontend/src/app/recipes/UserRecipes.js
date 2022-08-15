@@ -1,15 +1,16 @@
 import {useCookies} from 'react-cookie';
 import {useEffect, useState} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
-import {Button, ButtonGroup, Container, Label} from 'reactstrap';
+import {Button, Container} from 'reactstrap';
 import axios from 'axios';
+
+import "../../styles/general.css";
+import "../../styles/recipes.css";
 
 function UserRecipes() {
     const [cookies, setCookies] = useCookies();
     const navigate = useNavigate();
     const [recipes, setRecipes] = useState([]);
-    const activeVisibilityButtonColor = 'primary';
-    const inactiveVisibilityButtonColor = 'secondary';
     const [visibilityChangeFlag, setVisibilityChangeFlag] = useState(false);
 
     const doGetAll = () => {
@@ -45,34 +46,29 @@ function UserRecipes() {
     };
 
     const list = recipes.map(userToRecipe => {
-        return <div key={userToRecipe.recipe.id}>
-            <Label>{userToRecipe.recipe.name}</Label>
-            <div>
-                <ButtonGroup>
-                    <Button size='sm' color='primary' hidden={userToRecipe.owner === false} tag={Link} to={'/recipes/'+userToRecipe.recipe.id}>Edit</Button>
-                    <Button size='sm' color='danger' onClick={() => handleDelete(userToRecipe.recipe.id)}>Delete</Button>
-                </ButtonGroup>
-                <div hidden={userToRecipe.owner === false}>
-                    <Label>Visibility</Label>
-                    <ButtonGroup>
-                        <Button size='sm' color={userToRecipe.recipe.isPublic ? activeVisibilityButtonColor : inactiveVisibilityButtonColor} onClick={() => handleVisibilityChange(userToRecipe.recipe, true)}>Public</Button>
-                        <Button size='sm' color={userToRecipe.recipe.isPublic ? inactiveVisibilityButtonColor : activeVisibilityButtonColor} onClick={() => handleVisibilityChange(userToRecipe.recipe, false)}>Private</Button>
-                    </ButtonGroup>
+        return <div className='card-container' key={userToRecipe.recipe.id}>
+            <div className='card'>
+                <div className='card-content'>
+                    <div className='card-content-item-full'>{userToRecipe.recipe.name}</div>
                 </div>
+                <div className='card-content'>
+                    <Button className='button-secondary' hidden={userToRecipe.owner === false} tag={Link} to={'/recipes/'+userToRecipe.recipe.id}>Edit</Button>
+                    <Button className={userToRecipe.owner === false ? 'button-danger-full' : 'button-danger'} onClick={() => handleDelete(userToRecipe.recipe.id)}>Delete</Button>
+                </div>
+            </div>
+            <div className='card-extension' hidden={userToRecipe.owner === false}>
+                <Button className={userToRecipe.recipe.isPublic ? 'button-primary' : 'button-secondary'} onClick={() => handleVisibilityChange(userToRecipe.recipe, true)}>Public</Button>
+                <Button className={userToRecipe.recipe.isPublic ? 'button-secondary' : 'button-primary'} onClick={() => handleVisibilityChange(userToRecipe.recipe, false)}>Private</Button>
             </div>
         </div>
     })
 
-    return (<Container fluid>
-        <div>
-            <ButtonGroup>
-                <Button color='primary' tag={Link} to='/recipes/write'>Write recipe</Button>
-            </ButtonGroup>
+    return (<Container fluid className='font-general'>
+        <div className='title-container'>
+            <h3>Saved recipes</h3>
+            <Button className='button-primary' tag={Link} to='/recipes/write'>Write recipe</Button>
         </div>
-        <h3>
-            Saved recipes
-        </h3>
-        <div>
+        <div className='cards-container'>
             {list}
         </div>
     </Container>)

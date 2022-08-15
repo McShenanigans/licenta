@@ -3,6 +3,9 @@ import { useCookies } from "react-cookie"
 import { useLocation } from "react-router-dom";
 import { Button, Collapse, Nav, Navbar, NavbarToggler, NavItem, NavLink } from "reactstrap"
 
+import "../styles/general.css";
+import "../styles/navigation.css"
+
 function Navigation() {
     const [cookies, setCookies, removeCookies] = useCookies();
     const [isOpen, setIsOpen] = useState(true);
@@ -23,25 +26,25 @@ function Navigation() {
     }
 
     return (
-        <div>
-            <Navbar color="light" light expand='md'>
+        <div className="font-general">
+            <Navbar expand='md' className="navbar">
                 <NavbarToggler onClick={() => handleToggle()}/>
                 <Collapse isOpen={isOpen} navbar>
-                    <Nav pills>
-                        <NavItem>
-                            <NavLink href='http://localhost:3000/schedule'>Schedule</NavLink>
+                    <Nav>
+                        <NavItem className="navbar-item">
+                            <NavLink className="navlink" href='http://localhost:3000/schedule'>Schedule</NavLink>
                         </NavItem>
-                        <NavItem>
-                            <NavLink href='http://localhost:3000/ingredients'>Ingredients</NavLink>
+                        <NavItem className="navbar-item">
+                            <NavLink className="navlink" href='http://localhost:3000/ingredients'>Ingredients</NavLink>
                         </NavItem>
-                        <NavItem>
-                            <NavLink href='http://localhost:3000/recipes'>Recipes</NavLink>
+                        <NavItem className="navbar-item">
+                            <NavLink className="navlink" href='http://localhost:3000/recipes'>Recipes</NavLink>
                         </NavItem>
-                        <NavItem>
-                            <NavLink href='http://localhost:3000/store'>Store</NavLink>
+                        <NavItem className="navbar-item">
+                            <NavLink className="navlink" href='http://localhost:3000/store'>Store</NavLink>
                         </NavItem>
                     </Nav>
-                    <Button size='sm' color='secondary' type='button' onClick={() => handleLogOut()}>Log out</Button>
+                    <Button className="logout-btn" type='button' onClick={() => handleLogOut()}>Log out</Button>
                 </Collapse>
             </Navbar>
         </div>

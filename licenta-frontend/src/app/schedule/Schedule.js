@@ -9,6 +9,9 @@ import ShoppingListModal from './ShoppingListModal';
 import ConfirmRecipeCompletionDialog from './ConfirmRecipeCompletionDialog';
 import AutomaticSchedulerModal from './AutomaticSchedulerModal';
 
+import "../../styles/general.css";
+import "../../styles/schedule.css";
+
 function Schedule(){
     const [cookie, setCookies] = useCookies();
     const [currentEntries, setCurrentEntries] = useState([]);
@@ -103,17 +106,19 @@ function Schedule(){
     }
 
     const entriesRenderList = currentEntries.map(complexEntry => {
-        return (<div key={complexEntry.entry.id}>
-            <Label>{complexEntry.entry.recipe.name}</Label>
-            <br/>
-            <Label>{'Scheduled for ' + complexEntry.entry.date.toDateString() + ', at ' + getHourMinutesString(complexEntry.entry.date)}</Label>
-            <ButtonGroup>
-                <Button color='danger' onClick={() => handleEntryDelete(complexEntry.entry.id)}>X</Button>
-                <Button color='primary' hidden={complexEntry.allIngredientsAvailable === true} 
+        return (
+        <div key={complexEntry.entry.id} className="card-container">
+            <div className='card'>
+                <h5 className='card-content-item-small'>{complexEntry.entry.recipe.name}</h5>
+                <h5 className='card-content-item-small'>{'Scheduled for ' + complexEntry.entry.date.toDateString() + ', at ' + getHourMinutesString(complexEntry.entry.date)}</h5>
+            </div>
+            <div className='card-extension'>
+                <Button className='button-primary-full' hidden={complexEntry.allIngredientsAvailable === true} 
                     onClick={() => enableMissingIngredientsModal(complexEntry.entry.id)}>
-                    See the ingredients you are missing
+                    Missing ingredients
                 </Button>
-            </ButtonGroup>
+                <Button className='button-danger-full' onClick={() => handleEntryDelete(complexEntry.entry.id)}>Cancel</Button>
+            </div>
             <MissingIngredients show={missingIngredientsModalToShow === complexEntry.entry.id} onClose={() => handleModalOnClose()} missingIngredients={complexEntry.missingIngredients}/>
             <ConfirmRecipeCompletionDialog
                 show={idsOfPastEntries.indexOf(complexEntry.entry.id) !== -1} 
@@ -124,15 +129,13 @@ function Schedule(){
     });
 
     return (
-        <div>
-            <div>
-                <ButtonGroup>
-                    <Button color='primary' onClick={() => setShowAddEntryModal(true)}>Schedule a recipe</Button>
-                    <Button color='secondary' onClick={() => setShowShoppingListModal(true)}>See shopping list</Button>
-                    <Button color='success' onClick={() => setShowAutomaticSchedulerModal(true)}>Open the automatic recipe scheduler</Button>
-                </ButtonGroup>
+        <div className='font-general'>
+            <div className='functions-button-row'>
+                <Button className='button-primary' onClick={() => setShowAddEntryModal(true)}>Schedule a recipe</Button>
+                <Button className='button-ternary' onClick={() => setShowShoppingListModal(true)}>See shopping list</Button>
+                <Button className='button-caution' onClick={() => setShowAutomaticSchedulerModal(true)}>Automatic scheduler</Button>
             </div>
-            <div>
+            <div className='cards-container'>
                 {entriesRenderList}
             </div>
             <ScheduleModal show={showAddEntryModal} onClose={() => handleModalOnClose()}/>

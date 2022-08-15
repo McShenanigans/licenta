@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Label } from "reactstrap";
+import { Label, Button } from "reactstrap";
+
+import "../../styles/general.css";
 
 const MissingIngredients = props => {
     const [missingIngredientsList, setMissingIngredientsList] = useState([]);
@@ -10,7 +12,7 @@ const MissingIngredients = props => {
     
     const list = missingIngredientsList.map(ingredientQuantity => {
         return (
-            <div>
+            <div className="card-xs">
                 <Label>{ingredientQuantity.ingredient.name}</Label><br/>
                 <Label>{ingredientQuantity.quantity} {ingredientQuantity.ingredient.measurementUnit.name}</Label>
             </div>
@@ -23,10 +25,12 @@ const MissingIngredients = props => {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <h4 className="modal-title">Missing ingredients</h4>
-                    <button onClick={() => props.onClose()}>X</button>
+                    <Button className="button-danger" onClick={() => props.onClose()}>X</Button>
                 </div>
                 <div className="modal-body">
-                    {list}
+                    <div className="cards-container-xs">
+                        {list}
+                    </div>
                 </div>
             </div>
         </div>

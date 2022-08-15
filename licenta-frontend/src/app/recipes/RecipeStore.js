@@ -6,6 +6,8 @@ import { Button, ButtonGroup, Container, Label } from "reactstrap";
 import Select from 'react-select'
 import RecipeDetailsModal from "./RecipeDetailsModal";
 
+import "../../styles/general.css";
+
 function RecipeStore() {
     const [availableRecipes, setAvailableRecipes] = useState([]);
     const [renderFlag, setRenderFlag] = useState(false);
@@ -126,13 +128,15 @@ function RecipeStore() {
 
     const recipeRenderList = availableRecipes.map(recipe => {
         return (
-            <div key={recipe.id}>
-                <Label>{recipe.name}</Label>
-                <div>
-                    <ButtonGroup>
-                        <Button size='sm' color='primary' onClick={() => setDetailsModalToShow(recipe.id)}>Details</Button>
-                        <Button size='sm' color='success' onClick={() => handleAddToCookbook(recipe.id)}>Add To Cookbook</Button>
-                    </ButtonGroup>
+            <div key={recipe.id} className="card-container">
+                <div className="card">
+                    <div className="card-content">
+                        <div className="card-content-item-full">{recipe.name}</div>
+                    </div>
+                </div>
+                <div className="card-extension">
+                    <Button className="button-secondary" onClick={() => setDetailsModalToShow(recipe.id)}>Details</Button>
+                    <Button className="button-primary" onClick={() => handleAddToCookbook(recipe.id)}>Save</Button>
                 </div>
                 <RecipeDetailsModal recipe={recipe} show={detailsModalToShow === recipe.id} onClose={() => handleDetailsModalOnClose()}/>
             </div>
@@ -141,38 +145,42 @@ function RecipeStore() {
 
     const tagFilterList = selectedTags.map(tag => {
         return (
-            <div key={tag.id}>
-                <Label>{tag.name}</Label>
-                <Button size='sm' color="danger" onClick={() => unselectTag(tag)}>X</Button>
+            <div key={tag.id} className="card-small">
+                <div className="card-content">
+                    <div className="card-content-item-small">{tag.name}</div>
+                    <Button className="button-danger" onClick={() => unselectTag(tag)}>X</Button>
+                </div>
             </div>
         );
     })
 
     const ingredientFilterList = selectedIngredients.map(ingredient => {
         return (
-            <div key={ingredient.id}>
-                <Label>{ingredient.name}</Label>
-                <Button size="sm" color="danger" onClick={() => unselectIngredient(ingredient)}>X</Button>
+            <div key={ingredient.id} className="card-small">
+                <div className="card-content">
+                    <div className="card-content-item-small">{ingredient.name}</div>
+                    <Button className="button-danger" onClick={() => unselectIngredient(ingredient)}>X</Button>
+                </div>
             </div>
         )
     })
 
-    return (<Container>
+    return (<Container className="font-general form-body">
         <div>
             <Label>Filter by tag</Label>
             <Select value={null} options={availableTags} onChange={handleTagSelect}/>
-            <div>
+            <div className="cards-container-small">
                 {tagFilterList}
             </div>
         </div>
         <div>
             <Label>Filter by ingredients</Label>
             <Select value={null} options={availableIngredients} onChange={handleIngredientSelect}/>
-            <div>
+            <div className="cards-container-small">
                 {ingredientFilterList}
             </div>
         </div>
-        <div>
+        <div className="cards-container">
             {recipeRenderList}
         </div>
     </Container>);

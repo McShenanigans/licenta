@@ -64,7 +64,7 @@ function Register() {
 
         return (
             <div className = "app" >
-            <div className = 'register-form' >
+            <div className = 'login-form' >
             <div className = 'title' > Register </div> 
                 {isSubmitted ? navigate("/") : renderForm} </div>
             </div>  

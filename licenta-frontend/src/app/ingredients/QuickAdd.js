@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import {Button, Input} from 'reactstrap';
 
+import "../../styles/general.css";
+import "../../styles/ingredients.css";
+
 const QuickAdd = props => {
 
     const [quickAddValue, setQuickAddValue] = useState(null);
@@ -23,9 +26,9 @@ const QuickAdd = props => {
     }
 
     return (
-        <div>
+        <div className="quick-add-container">
             <Input type='number' placeholder='Input a quantity to add...' value={quickAddValue} onChange={handleQuickAddChange}/>
-            <Button type='button' color='primary' onClick={() => handleQuickAdd()}>Add</Button>
+            <Button className="button-primary" type='button' color='primary' onClick={() => handleQuickAdd()}>Add</Button>
         </div>
     )
 }

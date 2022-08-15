@@ -1,9 +1,12 @@
 import {useCookies} from 'react-cookie';
 import {useEffect, useState} from 'react'
 import {useNavigate, Link} from 'react-router-dom';
-import {Button, ButtonGroup, Container} from 'reactstrap';
+import {Button, Container} from 'reactstrap';
 import axios from 'axios';
 import QuickAdd from './QuickAdd';
+
+import "../../styles/general.css";
+import "../../styles/ingredients.css";
 
 function UserIngredients() {
     const [cookies, setCookies] = useCookies();
@@ -33,31 +36,29 @@ function UserIngredients() {
     }
 
     const list = ingredients.map(ingredient => {
-        return <div className='col-md-10' key={ingredient.ingredient.id}>
-            <div className='col-md-8'>
-                <div className='col-md-12'>{ingredient.ingredient.name}</div>
-                <div className='col-md-12'>{ingredient.quantity} {ingredient.ingredient.measurementUnit.name}</div>
+        return <div className='card-container' key={ingredient.ingredient.id}>
+            <div className='card'>
+                <div className='card-content'>
+                    <div className='card-content-item'>{ingredient.ingredient.name}</div>
+                    <div className='card-ingredient-quantity'>{ingredient.quantity} {ingredient.ingredient.measurementUnit.name}</div>
+                </div>
+                <div className='card-content'>
+                    <Button className='button-secondary' tag={Link} to={'/ingredients/'+ingredient.ingredient.id}>Edit</Button>
+                    <Button className='button-danger' onClick={() => {doRemove(ingredient.ingredient.id)}}>Delete</Button>
+                </div>
             </div>
-            <div className='col-md-4'>
-                <ButtonGroup>
-                    <Button size='sm' color='primary' tag={Link} to={'/ingredients/'+ingredient.ingredient.id}>Edit</Button>
-                    <Button size='sm' color='danger' onClick={() => {doRemove(ingredient.ingredient.id)}}>Delete</Button>
-                </ButtonGroup>
+            <div className='card-extension'>
+                <QuickAdd ingredient={ingredient.ingredient} quantity={ingredient.quantity} triggerRender={() => flipRenderFlag()}/>
             </div>
-            <QuickAdd ingredient={ingredient.ingredient} quantity={ingredient.quantity} triggerRender={() => flipRenderFlag()}/>
         </div>
     })
 
-    return (<Container fluid>
-        <div>
-            <ButtonGroup>
-                <Button color='primary' tag={Link} to='/ingredients/create'>Add Ingredient</Button>
-            </ButtonGroup>
+    return (<Container fluid className='font-general'>
+        <div className='title-container'>
+            <h3>Your ingredients</h3>
+            <Button className='button-primary' tag={Link} to='/ingredients/create'>Add new ingredient</Button>
         </div>
-        <h3>
-            Your ingredients
-        </h3>
-        <div>
+        <div className='cards-container'>
             {list}
         </div>
     </Container>);

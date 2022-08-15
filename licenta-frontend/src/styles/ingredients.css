@@ -1,0 +1,21 @@
+.card-ingredient-quantity{
+    background-color: #FF9F1C;
+    color: white;
+    font-size: 20px;
+    width: 50%;
+    border-top-right-radius: 8px;
+    height: auto;
+    align-self: flex-end;
+    padding: 5px 10px;
+}
+
+.quick-add-container {
+    margin-top: 5px;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.quick-add-container > .button-primary {
+    margin-left: 0px;
+    border: none;
+}

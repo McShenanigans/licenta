@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { Label } from "reactstrap";
+import { Label, Button } from "reactstrap";
+
+import "../../styles/general.css";
 
 const ShoppingListModal = props => {
     const [shoppingList, setShoppingList] = useState([]);
@@ -20,7 +22,7 @@ const ShoppingListModal = props => {
 
     const list = shoppingList.map(ingredientQuantity => {
         return (
-            <div key={ingredientQuantity.ingredient.id}>
+            <div key={ingredientQuantity.ingredient.id} className="card-xs">
                 <Label>{ingredientQuantity.ingredient.name}</Label><br/>
                 <Label>{ingredientQuantity.quantity} {ingredientQuantity.ingredient.measurementUnit.name}</Label>
             </div>
@@ -34,10 +36,12 @@ const ShoppingListModal = props => {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <h4 className="modal-title">Shopping list</h4>
-                    <button onClick={() => props.onClose()}>X</button>
+                    <Button className="button-danger" onClick={() => props.onClose()}>X</Button>
                 </div>
                 <div className="modal-body">
-                    {list}
+                    <div className="cards-container-xs">
+                        {list}
+                    </div>
                 </div>
             </div>
         </div>

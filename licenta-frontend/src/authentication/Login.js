@@ -45,7 +45,7 @@ function Login() {
                         <label > Password: </label> 
                         <input type = "password" name = 'password' required />
                     </div>
-                    <div>
+                    <div className='error'>
                         { errorMessage }
                     </div>
                     <div className = 'button-container' >
@@ -61,7 +61,7 @@ function Login() {
             <div className = 'title' > Log In </div> 
                 {isSubmitted ? navigate("/schedule") : renderForm} </div>
                 <div>
-                    <Link to="/register">Don't have an account? Register here!</Link>
+                    <Link className='register-button' to="/register">Don't have an account? Register here!</Link>
                 </div>
             </div>
         );

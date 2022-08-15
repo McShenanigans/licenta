@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import { ButtonGroup, Input, Label, Button } from "reactstrap";
+
+import "../../styles/general.css";
 
 const AutomaticSchedulerModal = props => {
     const [cookies, setCookies] = useCookies();
@@ -43,7 +45,7 @@ const AutomaticSchedulerModal = props => {
     }
 
     const list = timeTags.map(tag => {
-        return <Button color={isTagSelected(tag) ? 'primary' : 'secondary'} onClick={() => flipTagSelection(tag)}>{tag.name}</Button>
+        return <Button className={isTagSelected(tag) ? 'button-primary' : 'button-warning'} onClick={() => flipTagSelection(tag)}>{tag.name}</Button>
     });
 
     const handleDaysChange = (event) => {
@@ -66,7 +68,7 @@ const AutomaticSchedulerModal = props => {
                 <div className="modal-content" onClick={e => e.stopPropagation()}>
                     <div className="modal-header">
                         <h4 className="modal-title">Automatic recipe scheduler</h4>
-                        <button onClick={() => props.onClose()}>X</button>
+                        <Button className="button-danger" onClick={() => props.onClose()}>X</Button>
                     </div>
                     <div className="modal-body">
                         <div>
@@ -79,8 +81,7 @@ const AutomaticSchedulerModal = props => {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <Button color="success" onClick={() => handleSubmit()}>Submit</Button>
-                        <Button color="danger" onClick={props.onClose}>Close</Button>
+                        <Button className="button-primary" onClick={() => handleSubmit()}>Start</Button>
                     </div>
                 </div>
             </div>)

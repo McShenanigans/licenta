@@ -1,5 +1,9 @@
 import axios from "axios";
-import { Label, Button } from "reactstrap";
+import { Button } from "reactstrap";
+
+import "../../styles/general.css";
+import "../../styles/schedule.css";
+
 
 const ConfirmRecipeCompletionDialog = props => {
     if(!props.show) return null;
@@ -19,13 +23,14 @@ const ConfirmRecipeCompletionDialog = props => {
                 </div>
                 <div className="modal-body">
                     <div>
-                        <Label>{props.entry.recipe.name}</Label>
-                        <Label>Date: {props.date}</Label>
+                        <h5>{props.entry.recipe.name}</h5>
+                        <h5>Date: {props.date}</h5>
+                        <h5>Ingredients for this recipe will be automatically subtracted from your pantry</h5>
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <Button color="success" onClick={() => handleAnswer(true)}>Yes</Button>
-                    <Button color="danger" onClick={() => handleAnswer(false)}>No</Button>
+                    <Button className="button-primary" onClick={() => handleAnswer(true)}>Yes</Button>
+                    <Button className="button-warning" onClick={() => handleAnswer(false)}>No</Button>
                 </div>
             </div>
         </div>

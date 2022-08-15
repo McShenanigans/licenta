@@ -4,6 +4,8 @@ import axios from 'axios';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 
+import "../../styles/general.css";
+
 function CreateUserIngredient() {
     const [ingredient, setIngredient] = useState({id: -1, name: ""});
     const [quantity, setQuantity] = useState(0);
@@ -61,21 +63,23 @@ function CreateUserIngredient() {
         return <option key={index} value={index}>{ingred.name} ({ingred.measurementUnit.name})</option>
     })
 
-    return(<Container>
+    return(<Container className='font-general'>
         <Form onSubmit={handleSubmit}>
-            <FormGroup>
-                <Label for='ingredient'>Select an ingredient to add to your pantry</Label>
-                <Input type='select' name='ingredient' id='ingredient' onChange={handleChange} defaultValue={ingredient.name} readOnly={!isIngredientNameEditable}>
-                    {ingredientSelectList}
-                </Input>
-            </FormGroup>
-            <FormGroup>
-                <Label>What is the amount of this ingredient you have left?</Label>
-                <Input type='number' name='quantity' id='quantity' value={quantity} onChange={handleChange} />
-            </FormGroup>
-            <FormGroup>
-                <Button color='primary' type='submit' hidden={ingredients.length === 0}>{submitText}</Button>
-                <Button color='secondary' type='button' tag={Link} to='/ingredients'>Cancel</Button>
+            <div className='form-body'>
+                <FormGroup>
+                    <Label for='ingredient'>Select an ingredient to add to your pantry</Label>
+                    <Input type='select' name='ingredient' id='ingredient' onChange={handleChange} defaultValue={ingredient.name} readOnly={!isIngredientNameEditable}>
+                        {ingredientSelectList}
+                    </Input>
+                </FormGroup>
+                <FormGroup>
+                    <Label>What is the amount of this ingredient you have left?</Label>
+                    <Input type='number' name='quantity' id='quantity' value={quantity} onChange={handleChange} />
+                </FormGroup>
+            </div>
+            <FormGroup className='form-button-area'>
+                <Button className='button-primary' type='submit' hidden={ingredients.length === 0}>{submitText}</Button>
+                <Button className='button-warning' type='button' tag={Link} to='/ingredients'>Cancel</Button>
             </FormGroup>
         </Form>
     </Container>

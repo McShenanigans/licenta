@@ -1,0 +1,10 @@
+.functions-button-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin: 0px 20px;
+}
+
+.functions-button-row > .button-primary, .button-ternary, .button-caution {
+    width: 33% !important;
+    margin: 0;
+}

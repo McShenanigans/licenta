@@ -1,0 +1,49 @@
+.navbar {
+    color: white !important;
+    background-color: #FF9F1C !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.navbar-item {
+    border-right: 2px solid white !important;
+    padding: 5px 10px !important;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition-duration: 0.5s !important;
+}
+
+.navlink {
+    color: white !important;
+}
+
+.navbar-item:hover {
+    background-color: #2EC4B6 !important;
+    transition-duration: 0.5s !important;
+    border-radius: 10px !important;
+}
+
+.logout-btn{
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    border-right: 2px solid #2EC4B6 !important;
+    border-radius: 0;
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    padding: 12px 20px !important;
+    transition-duration: 0.5s !important;
+}
+
+.logout-btn:hover {
+    background-color: #dc2f02 !important;
+    border-right: 2px solid white !important;
+    border-radius: 10px;
+    transition-duration: 0.5s !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+  
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255);
+}

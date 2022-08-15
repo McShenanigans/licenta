@@ -1,0 +1,6 @@
+.card-extension > .button-primary, .button-secondary {
+    width: 50%;
+    height: 40px;
+    border-radius: 0;
+    border: none;
+}
