@@ -15,7 +15,7 @@ function UserIngredients() {
     const [renderFlag, setRenderFlag] = useState(false);
 
     const doGetAll = () => {
-        axios.get('http://localhost:8080/ingredients/'+cookies.user.id)
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/'+cookies.user.id)
         .then((response) => {
             setIngredients(response.data);
         });
@@ -27,7 +27,7 @@ function UserIngredients() {
     }, [renderFlag]);
 
     const doRemove = (id) => {
-        axios.delete('http://localhost:8080/ingredients/delete/' + cookies.user.id + '/' + id);
+        axios.delete('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/delete/' + cookies.user.id + '/' + id);
         flipRenderFlag();
     }
 

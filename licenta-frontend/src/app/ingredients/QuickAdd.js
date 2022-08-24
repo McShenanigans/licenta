@@ -16,7 +16,7 @@ const QuickAdd = props => {
     }
 
     const handleQuickAdd = () => {
-        axios.post('http://localhost:8080/ingredients/update/' + cookies.user.id, {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/update/' + cookies.user.id, {
             ingredient: props.ingredient,
             quantity: props.quantity + quickAddValue
         })

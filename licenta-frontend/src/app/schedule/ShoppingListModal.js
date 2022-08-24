@@ -10,7 +10,7 @@ const ShoppingListModal = props => {
     const [cookies, setCookies] = useCookies();
 
     const doGetAll = () => {
-        axios.get('http://localhost:8080/schedule/shoppingList/' + cookies.user.id)
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/shoppingList/' + cookies.user.id)
         .then(response => {
             setShoppingList(response.data);
         })

@@ -15,7 +15,7 @@ function Register() {
 
         var [userFirstName, userLastName, userUsername, userEmail, userPassword] = document.forms[0];
 
-        axios.post('http://localhost:8080/authentication/register', {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/authentication/register', {
             id: null,
             username: userUsername.value,
             email: userEmail.value,

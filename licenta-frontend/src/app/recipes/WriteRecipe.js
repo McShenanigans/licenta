@@ -33,21 +33,21 @@ function WriteRecipe(){
 
     const doGetAllIngredients = () => {
         if(typeof cookies.user.id === 'undefined') navigate('/');
-        axios.get('http://localhost:8080/admin/ingredients/')
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/')
         .then((response) => {
             let options = [];
             response.data.forEach(ingredient => {
                 options.push({value: ingredient, label: ingredient.name});
             });
-            axios.get('http://localhost:8080/recipe/tags').then(responseTags => {
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/tags').then(responseTags => {
                 let tagOptions = [];
                 responseTags.data.forEach(tag => {
                     tagOptions.push({value: tag, label: tag.name});
                 });
-                axios.get('http://localhost:8080/recipe/timeTags').then(responseTimeTags => {
+                axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/timeTags').then(responseTimeTags => {
                     setTimeTagSelectList(responseTimeTags.data);
                     if(params.id !== 'write'){
-                        axios.get('http://localhost:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
+                        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/' + cookies.user.id + '/' + params.id).then(response => {
                             if(response.data === null) navigate('/404');
 
                             setRecipeId(response.data.recipe.id);
@@ -263,7 +263,7 @@ function WriteRecipe(){
     }
 
     const doAddRecipe = () => {
-        let submitUrl = 'http://localhost:8080/recipe/add/' + cookies.user.id;
+        let submitUrl = 'http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/add/' + cookies.user.id;
         axios.post(submitUrl, {
             recipe: {
                 id: recipeId,
@@ -281,7 +281,7 @@ function WriteRecipe(){
     }
 
     const doUpdateRecipe = () => {
-        let submitUrl = 'http://localhost:8080/recipe/update';
+        let submitUrl = 'http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/update';
         axios.put(submitUrl, {
             id: recipeId,
             name: name,

@@ -23,7 +23,7 @@ function Login() {
 
         var [userEmail, userPassword] = document.forms[0];
 
-        axios.post('http://localhost:8080/authentication/login', {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/authentication/login', {
             email: userEmail.value,
             password: userPassword.value
         }).then((response) => {

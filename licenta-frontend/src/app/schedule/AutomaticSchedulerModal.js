@@ -12,7 +12,7 @@ const AutomaticSchedulerModal = props => {
     const [selectedTimeTags, setSelectedTimeTags] = useState([]);
 
     const getAll = () => {
-        axios.get('http://localhost:8080/recipe/timeTags').then((response) =>  {
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/timeTags').then((response) =>  {
             setTimeTags(response.data);
         })
     }
@@ -53,7 +53,7 @@ const AutomaticSchedulerModal = props => {
     }
 
     const handleSubmit = () => {
-        axios.post('http://localhost:8080/schedule/auto', {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/auto', {
             user: cookies.user,
             numberOfDays: numberOfDays,
             timeTags: selectedTimeTags,

@@ -33,7 +33,7 @@ function Schedule(){
             return response;
         });
 
-        client.get("http://localhost:8080/schedule/" + cookie.user.id)
+        client.get("http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/" + cookie.user.id)
         .then((response) => {
             setCurrentEntries(response.data);
 
@@ -89,7 +89,7 @@ function Schedule(){
     };
 
     const handleEntryDelete = (entryId) => {
-        axios.delete('http://localhost:8080/schedule/delete/' + entryId)
+        axios.delete('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/delete/' + entryId)
         .then(flipRenderFlag());
     };
 

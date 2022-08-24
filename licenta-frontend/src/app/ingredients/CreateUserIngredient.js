@@ -14,24 +14,24 @@ function CreateUserIngredient() {
     const navigate = useNavigate();
     const params = useParams();
     const [isIngredientNameEditable, setIsIngredientNameEditable] = useState(true);
-    const [submitUrl, setSubmitUrl] = useState('http://localhost:8080/ingredients/create/'+cookies.user.id);
+    const [submitUrl, setSubmitUrl] = useState('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/create/'+cookies.user.id);
     const [submitText, setSubmitText] = useState('Add');
 
     useEffect(() => {
         if(typeof cookies.user === 'undefined') navigate('/');
         if(params.id !== 'create'){
             setIsIngredientNameEditable(false);
-            axios.get('http://localhost:8080/ingredients/'+cookies.user.id+'/'+params.id)
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/'+cookies.user.id+'/'+params.id)
             .then((response) => {
                 setIngredient(response.data.ingredient);
                 setIngredients([response.data.ingredient]);
                 setQuantity(response.data.quantity);
-                setSubmitUrl('http://localhost:8080/ingredients/update/'+cookies.user.id);
+                setSubmitUrl('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/update/'+cookies.user.id);
                 setSubmitText('Update');
             })
         }
         else {
-            axios.get('http://localhost:8080/ingredients/absent/' + cookies.user.id).then(response => {
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/ingredients/absent/' + cookies.user.id).then(response => {
                 setIngredients(response.data);
                 if(response.data.length > 0) setIngredient(response.data[0]);
             })

@@ -17,7 +17,7 @@ const ScheduleModal = props => {
     };
 
     const doGetAll = () => {
-        axios.get("http://localhost:8080/recipe/"+cookies.user.id)
+        axios.get("http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/"+cookies.user.id)
         .then((response) => {
             let newRecipes = []
             response.data.forEach(entry => {
@@ -32,7 +32,7 @@ const ScheduleModal = props => {
     }, []);
 
     const handleSubmit = () => {
-        axios.post('http://localhost:8080/schedule/add/'+cookies.user.id, {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/add/'+cookies.user.id, {
             id: null,
             recipe: selectedRecipe,
             date: selectedDate

@@ -21,7 +21,7 @@ function RecipeStore() {
 
     const getAll = () => {
         if(availableTags.length === 0 && selectedTags.length === 0) {
-            axios.get('http://localhost:8080/recipe/tags').then((response) => {
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/tags').then((response) => {
                 let newTags = [];
                 response.data.forEach(tag => {
                    newTags.push({value: tag, label: tag.name}) 
@@ -30,7 +30,7 @@ function RecipeStore() {
             })
         }
         if(availableIngredients.length === 0 && selectedIngredients.length === 0) {
-            axios.get('http://localhost:8080/admin/ingredients/').then((response) => {
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/').then((response) => {
                 let newIngredients = [];
                 response.data.forEach(ingredient => {
                     newIngredients.push({value: ingredient, label: ingredient.name})
@@ -38,7 +38,7 @@ function RecipeStore() {
                 setAvailableIngredients(newIngredients);
             })
         }
-        axios.post('http://localhost:8080/recipe/store/' + cookies.user.id, {
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/store/' + cookies.user.id, {
             tags: selectedTags,
             ingredients: selectedIngredients
         })
@@ -53,7 +53,7 @@ function RecipeStore() {
     }, [renderFlag]);
 
     const handleAddToCookbook = (recipeId) => {
-        axios.post('http://localhost:8080/recipe/connect/' + cookies.user.id + '/' + recipeId)
+        axios.post('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/connect/' + cookies.user.id + '/' + recipeId)
         .then(() => {triggerRender()});
     }
 

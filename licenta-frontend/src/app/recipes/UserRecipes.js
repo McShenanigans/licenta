@@ -16,7 +16,7 @@ function UserRecipes() {
     const [recipeIDForDetails, setRecipeIdForDetails] = useState(null);
 
     const doGetAll = () => {
-        axios.get('http://localhost:8080/recipe/' + cookies.user.id)
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/' + cookies.user.id)
         .then((response) => {
             setRecipes(response.data);
         });
@@ -28,14 +28,14 @@ function UserRecipes() {
     }, [recipes.length, visibilityChangeFlag]);
 
     const handleDelete = (recipeId) => {
-        axios.delete('http://localhost:8080/recipe/delete/' + cookies.user.id + '/' + recipeId)
+        axios.delete('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/delete/' + cookies.user.id + '/' + recipeId)
         .then(
             window.location.reload()
         );
     };
 
     const handleVisibilityChange = (recipe, isPublic) => {
-        axios.put('http://localhost:8080/recipe/update', {
+        axios.put('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/recipe/update', {
             id: recipe.id,
             name: recipe.name,
             description: recipe.description,

@@ -7,7 +7,7 @@ function Ingredients() {
     const [ingredients, setIngredients] = useState([])
 
     const doGetAll = () => {
-        axios.get('http://localhost:8080/admin/ingredients/')
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/')
         .then((response) => {
             setIngredients(response.data);
         });

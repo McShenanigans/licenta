@@ -9,7 +9,7 @@ const ConfirmRecipeCompletionDialog = props => {
     if(!props.show) return null;
 
     const handleAnswer = (answer) => {
-        axios.delete('http://localhost:8080/schedule/delete/' + props.entry.id + '/' + answer)
+        axios.delete('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/schedule/delete/' + props.entry.id + '/' + answer)
         .then(() => {
             props.onClose();
         })

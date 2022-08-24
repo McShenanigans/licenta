@@ -32,16 +32,16 @@ function Navigation() {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav>
                         <NavItem className="navbar-item">
-                            <NavLink className="navlink" href='http://localhost:3000/schedule'>Schedule</NavLink>
+                            <NavLink className="navlink" href='/schedule/'>Schedule</NavLink>
                         </NavItem>
                         <NavItem className="navbar-item">
-                            <NavLink className="navlink" href='http://localhost:3000/ingredients'>Ingredients</NavLink>
+                            <NavLink className="navlink" href='/ingredients/'>Ingredients</NavLink>
                         </NavItem>
                         <NavItem className="navbar-item">
-                            <NavLink className="navlink" href='http://localhost:3000/recipes'>Recipes</NavLink>
+                            <NavLink className="navlink" href='/recipes/'>Recipes</NavLink>
                         </NavItem>
                         <NavItem className="navbar-item">
-                            <NavLink className="navlink" href='http://localhost:3000/store'>Store</NavLink>
+                            <NavLink className="navlink" href='/store/'>Store</NavLink>
                         </NavItem>
                     </Nav>
                     <Button className="logout-btn" type='button' onClick={() => handleLogOut()}>Log out</Button>

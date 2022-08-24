@@ -11,25 +11,25 @@ function CreateIngredient() {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [categories, setCategories] = useState([]);
     const [ingredientId, setIngredientId] = useState(null);
-    const [submitUrl, setSubmitUrl] = useState('http://localhost:8080/admin/ingredients/create');
+    const [submitUrl, setSubmitUrl] = useState('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/create');
     const [submitText, setSubmitText] = useState('Create');
     
     useEffect(() => {
         if(params.id !== 'create'){
-            axios.get('http://localhost:8080/admin/ingredients/'+params.id).then(response => {
+            axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/'+params.id).then(response => {
                 setName(response.data.name);
                 setMeasurementUnit(response.data.measurementUnit);
                 setSelectedCategories(response.data.categories);
                 setIngredientId(response.data.id);
-                setSubmitUrl('http://localhost:8080/admin/ingredients/update');
+                setSubmitUrl('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredients/update');
                 setSubmitText('Update');
             })
         }
-        axios.get('http://localhost:8080/measurementUnits/').then((response => {
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/measurementUnits/').then((response => {
             setMeasurementUnits(response.data);
             if(measurementUnit.id === -1) setMeasurementUnit(response.data[0]);
         }));
-        axios.get('http://localhost:8080/admin/ingredientCategory/').then((response => {
+        axios.get('http://ec2-34-207-124-110.compute-1.amazonaws.com:8080/admin/ingredientCategory/').then((response => {
             setCategories(response.data);
         }));
     }, []);
